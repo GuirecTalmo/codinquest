@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: Request,
@@ -11,10 +11,7 @@ export async function GET(
     const session = await auth();
 
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Non authentifié' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
 
     // Récupérer l'ID du quiz depuis les params
@@ -36,12 +33,12 @@ export async function GET(
         },
         questions: {
           orderBy: {
-            order: 'asc',
+            order: "asc",
           },
           include: {
             answers: {
               orderBy: {
-                order: 'asc',
+                order: "asc",
               },
               select: {
                 id: true,
@@ -56,10 +53,7 @@ export async function GET(
     });
 
     if (!quiz) {
-      return NextResponse.json(
-        { error: 'Quiz non trouvé' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Quiz non trouvé" }, { status: 404 });
     }
 
     // Formater la réponse sans révéler les réponses correctes
@@ -94,12 +88,10 @@ export async function GET(
       quiz: formattedQuiz,
     });
   } catch (error) {
-    console.error('Erreur lors de la récupération du quiz:', error);
+    console.error("Erreur lors de la récupération du quiz:", error);
     return NextResponse.json(
-      { error: 'Une erreur est survenue lors de la récupération du quiz' },
+      { error: "Une erreur est survenue lors de la récupération du quiz" },
       { status: 500 }
     );
   }
 }
-
-

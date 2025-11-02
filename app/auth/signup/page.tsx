@@ -40,9 +40,9 @@ export default function SignUpPage() {
     });
 
     if (!validationResult.success) {
-      validationResult.error.errors.forEach((error) => {
-        if (error.path[0]) {
-          newErrors[error.path[0].toString()] = error.message;
+      validationResult.error.issues.forEach((issue) => {
+        if (issue.path[0]) {
+          newErrors[issue.path[0].toString()] = issue.message;
         }
       });
     }
@@ -207,7 +207,7 @@ export default function SignUpPage() {
               disabled={isLoading}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
-              {isLoading ? 'Inscription...' : 'S'inscrire'}
+              {isLoading ? 'Inscription...' : "S'inscrire"}
             </button>
           </form>
 
