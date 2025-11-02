@@ -48,3 +48,4 @@ export function getDivisionIcon(division: Division): string {
   return icons[division];
 }
 
+
