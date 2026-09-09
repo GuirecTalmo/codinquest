@@ -42,7 +42,7 @@ export function QuizCard({ quiz, levelName }: QuizCardProps) {
 
   return (
     <Link
-      href={`/quiz/${quiz.id}`}
+      href={`/dashboard/quiz/${quiz.id}`}
       className="block group"
     >
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200 hover:shadow-xl hover:-translate-y-1">
