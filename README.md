@@ -38,7 +38,6 @@ Application de quiz interactive avec système de divisions et de progression. Te
 - **NextAuth.js v5** - Authentification
 - **Tailwind CSS** - Styling
 - **Zod** - Validation de schémas
-- **Zustand** - Gestion d'état (si utilisé)
 - **Lucide React** - Icônes
 - **bcryptjs** - Hashage de mots de passe
 
