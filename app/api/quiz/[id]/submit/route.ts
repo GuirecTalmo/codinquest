@@ -124,21 +124,20 @@ export async function POST(
       });
 
       // Les stats agrégées (score total, division, quiz complétés) ne sont
-      // créditées qu'à la toute première réussite de ce quiz par cet
-      // utilisateur — rejouer un quiz déjà réussi (ou échouer) ne doit rien
-      // ajouter, sous peine de pouvoir farmer le classement et les divisions.
-      let isFirstPass = false;
-      if (isPassed) {
-        const priorPass = await tx.quizAttempt.findFirst({
-          where: { userId, quizId, isPassed: true, id: { not: attempt.id } },
-          select: { id: true },
-        });
-        isFirstPass = !priorPass;
-      }
+      // affectées que par le premier verdict (réussite OU échec) sur ce quiz
+      // par cet utilisateur — rejouer un quiz déjà maîtrisé (réussi une fois)
+      // ne doit plus rien changer, sous peine de pouvoir farmer le classement
+      // et les divisions, ou de casser une série de promotion en s'entraînant
+      // sur du contenu déjà acquis.
+      const priorPass = await tx.quizAttempt.findFirst({
+        where: { userId, quizId, isPassed: true, id: { not: attempt.id } },
+        select: { id: true },
+      });
+      const wasAlreadyMastered = !!priorPass;
 
       let newDivision: string | null = null;
 
-      if (isFirstPass) {
+      if (isPassed && !wasAlreadyMastered) {
         const updatedUser = await tx.user.update({
           where: { id: userId },
           data: {
@@ -168,6 +167,12 @@ export async function POST(
             newDivision = nextDivision;
           }
         }
+      } else if (!isPassed && !wasAlreadyMastered) {
+        // Échec sur un quiz jamais réussi : la série de réussites consécutives repart à zéro
+        await tx.user.update({
+          where: { id: userId },
+          data: { divisionPoints: 0 },
+        });
       }
 
       return { attempt, newDivision };

@@ -40,6 +40,20 @@ export async function GET() {
       );
     }
 
+    // Taux de réussite = part des quiz distincts tentés que l'utilisateur a
+    // fini par réussir (cohérent avec quizzesCompleted, qui ne compte que
+    // les réussites distinctes depuis le fix anti-farming)
+    const attemptedQuizIds = await prisma.quizAttempt.findMany({
+      where: { userId: user.id },
+      select: { quizId: true },
+      distinct: ['quizId'],
+    });
+    const distinctQuizzesAttempted = attemptedQuizIds.length;
+    const successRate =
+      distinctQuizzesAttempted > 0
+        ? Math.round((user.quizzesCompleted / distinctQuizzesAttempted) * 100)
+        : 0;
+
     return NextResponse.json({
       user: {
         id: user.id,
@@ -54,6 +68,7 @@ export async function GET() {
         divisionPoints: user.divisionPoints,
         totalScore: user.totalScore,
         quizzesCompleted: user.quizzesCompleted,
+        successRate,
       },
     });
   } catch (error) {

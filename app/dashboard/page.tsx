@@ -22,6 +22,7 @@ interface UserProfile {
     divisionPoints: number;
     totalScore: number;
     quizzesCompleted: number;
+    successRate: number;
   };
 }
 
@@ -44,9 +45,16 @@ interface Level {
   quizzes: Quiz[];
 }
 
+interface Attempt {
+  quizId: string;
+  score: number;
+  isPassed: boolean;
+}
+
 export default function DashboardPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [levels, setLevels] = useState<Level[]>([]);
+  const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,10 +67,11 @@ export default function DashboardPage() {
       setLoading(true);
       setError(null);
 
-      // Récupérer le profil et les niveaux en parallèle
-      const [profileRes, levelsRes] = await Promise.all([
+      // Récupérer le profil, les niveaux et l'historique en parallèle
+      const [profileRes, levelsRes, historyRes] = await Promise.all([
         fetch('/api/user/profile'),
         fetch('/api/levels'),
+        fetch('/api/user/history?limit=100'),
       ]);
 
       if (!profileRes.ok || !levelsRes.ok) {
@@ -74,6 +83,17 @@ export default function DashboardPage() {
 
       setProfile(profileData);
       setLevels(levelsData.levels || []);
+
+      if (historyRes.ok) {
+        const historyData = await historyRes.json();
+        setAttempts(
+          historyData.attempts.map((attempt: { quiz: { id: string }; score: number; isPassed: boolean }) => ({
+            quizId: attempt.quiz.id,
+            score: attempt.score,
+            isPassed: attempt.isPassed,
+          }))
+        );
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
     } finally {
@@ -81,11 +101,15 @@ export default function DashboardPage() {
     }
   };
 
-  // Calculer le taux de réussite (basé sur les tentatives réussies)
-  // Pour l'instant, on peut l'estimer ou le mettre à 0 si pas encore calculé
-  const successRate = profile?.stats.quizzesCompleted
-    ? Math.round((profile.stats.divisionPoints / profile.stats.quizzesCompleted) * 100)
-    : 0;
+  const getQuizStatus = (quizId: string) => {
+    const quizAttempts = attempts.filter((a) => a.quizId === quizId);
+    if (quizAttempts.length === 0) return { attempted: false, passed: false };
+
+    return {
+      attempted: true,
+      passed: quizAttempts.some((a) => a.isPassed),
+    };
+  };
 
   if (loading) {
     return (
@@ -159,7 +183,7 @@ export default function DashboardPage() {
           />
           <StatCard
             label="Taux de Réussite"
-            value={`${successRate}%`}
+            value={`${profile.stats.successRate}%`}
             icon={Target}
             color="text-blue-400"
           />
@@ -195,23 +219,27 @@ export default function DashboardPage() {
 
                 {level.quizzes.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {level.quizzes.map((quiz) => (
-                      <QuizCard
-                        key={quiz.id}
-                        quiz={{
-                          id: quiz.id,
-                          title: quiz.title,
-                          description: quiz.description,
-                          difficulty: quiz.difficulty,
-                          timeLimit: quiz.timeLimit,
-                          passingScore: quiz.passingScore,
-                          passed: false, // À déterminer depuis l'historique
-                          attempted: false, // À déterminer depuis l'historique
-                        }}
-                        levelName={level.name}
-                        locked={locked}
-                      />
-                    ))}
+                    {level.quizzes.map((quiz) => {
+                      const status = getQuizStatus(quiz.id);
+
+                      return (
+                        <QuizCard
+                          key={quiz.id}
+                          quiz={{
+                            id: quiz.id,
+                            title: quiz.title,
+                            description: quiz.description,
+                            difficulty: quiz.difficulty,
+                            timeLimit: quiz.timeLimit,
+                            passingScore: quiz.passingScore,
+                            passed: status.passed,
+                            attempted: status.attempted,
+                          }}
+                          levelName={level.name}
+                          locked={locked}
+                        />
+                      );
+                    })}
                   </div>
                 ) : (
                   <p className="text-gray-400 text-center py-8">

@@ -1,10 +1,12 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
 import { LayoutDashboard, History, Trophy, LogOut, User } from 'lucide-react';
+import { Division } from '@prisma/client';
 
 export default function DashboardLayout({
   children,
@@ -14,6 +16,24 @@ export default function DashboardLayout({
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
+  const [division, setDivision] = useState<Division | null>(null);
+
+  // La division de la session NextAuth n'est fixée qu'à la connexion (voir
+  // lib/auth.ts) et ne reflète plus une promotion survenue en cours de
+  // session. On relit la division à jour depuis l'API à chaque changement de
+  // page, pour que ce badge reste synchronisé avec le reste du dashboard.
+  useEffect(() => {
+    if (!session?.user) return;
+
+    fetch('/api/user/profile')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.stats?.division) {
+          setDivision(data.stats.division);
+        }
+      })
+      .catch(() => {});
+  }, [session?.user, pathname]);
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
@@ -81,11 +101,8 @@ export default function DashboardLayout({
                       {session.user.name || session.user.email}
                     </span>
                   </div>
-                  {(session.user as { division?: string }).division && (
-                    <DivisionBadge
-                      division={(session.user as { division?: string }).division as any}
-                      size="sm"
-                    />
+                  {division && (
+                    <DivisionBadge division={division} size="sm" />
                   )}
                 </div>
               )}

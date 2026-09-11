@@ -129,14 +129,18 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (force = false) => {
     if (!quiz || isSubmitting) return;
 
-    // Vérifier que toutes les questions ont une réponse
-    const allAnswered = quiz.questions.every((q) => userAnswers[q.id]);
-    if (!allAnswered) {
-      alert('Veuillez répondre à toutes les questions avant de soumettre.');
-      return;
+    // Vérifier que toutes les questions ont une réponse, sauf en cas de
+    // soumission forcée (temps écoulé) : on envoie alors ce qui a été
+    // répondu jusque-là plutôt que de bloquer l'utilisateur indéfiniment.
+    if (!force) {
+      const allAnswered = quiz.questions.every((q) => userAnswers[q.id]);
+      if (!allAnswered) {
+        alert('Veuillez répondre à toutes les questions avant de soumettre.');
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -178,7 +182,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
 
   const handleTimeUp = () => {
     if (!isSubmitting && quiz) {
-      handleSubmit();
+      handleSubmit(true);
     }
   };
 
@@ -382,7 +386,7 @@ export default function QuizPage({ params }: { params: Promise<{ id: string }> }
 
         {isLastQuestion ? (
           <button
-            onClick={handleSubmit}
+            onClick={() => handleSubmit()}
             disabled={!allQuestionsAnswered || isSubmitting}
             className="flex items-center gap-2 px-6 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-colors"
           >

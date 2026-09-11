@@ -31,15 +31,15 @@ export const signupSchema = z.object({
 export type SignupInput = z.infer<typeof signupSchema>;
 
 // Schéma pour la soumission de quiz
+// Le tableau peut être vide : une soumission forcée par expiration du timer
+// peut survenir avant toute réponse (voir QuizTimer/handleTimeUp).
 export const quizSubmissionSchema = z.object({
-  answers: z
-    .array(
-      z.object({
-        questionId: z.string().min(1, 'Question ID requis'),
-        answerId: z.string().min(1, 'Answer ID requis'),
-      })
-    )
-    .min(1, 'Au moins une réponse est requise'),
+  answers: z.array(
+    z.object({
+      questionId: z.string().min(1, 'Question ID requis'),
+      answerId: z.string().min(1, 'Answer ID requis'),
+    })
+  ),
   timeSpent: z.number().int().positive().optional(),
 });
 
