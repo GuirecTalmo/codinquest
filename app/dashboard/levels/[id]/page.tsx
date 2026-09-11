@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { QuizCard } from '@/components/quiz/QuizCard';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
+import { isDivisionAtLeast } from '@/lib/quiz/divisions';
 import {
   Loader2,
   AlertCircle,
@@ -138,12 +139,8 @@ export default function LevelPage({ params }: { params: Promise<{ id: string }> 
 
   const isLevelLocked = (): boolean => {
     if (!level || !userDivision) return false;
-    
-    const divisionOrder = ['BRONZE', 'SILVER', 'GOLD', 'PLATINE', 'DIAMOND', 'MASTER', 'CHALLENGER'];
-    const userDivisionIndex = divisionOrder.indexOf(userDivision);
-    const minDivisionIndex = divisionOrder.indexOf(level.minDivision);
-    
-    return userDivisionIndex < minDivisionIndex;
+
+    return !isDivisionAtLeast(userDivision, level.minDivision);
   };
 
   const getPassedQuizzesCount = (): number => {

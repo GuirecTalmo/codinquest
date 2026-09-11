@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isDivisionAtLeast } from "@/lib/quiz/divisions";
 
 export async function GET(
   request: Request,
@@ -54,6 +55,19 @@ export async function GET(
 
     if (!quiz) {
       return NextResponse.json({ error: "Quiz non trouvé" }, { status: 404 });
+    }
+
+    // Vérifier que la division de l'utilisateur permet d'accéder à ce niveau
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id as string },
+      select: { division: true },
+    });
+
+    if (!user || !isDivisionAtLeast(user.division, quiz.level.minDivision)) {
+      return NextResponse.json(
+        { error: "Division insuffisante pour accéder à ce quiz" },
+        { status: 403 }
+      );
     }
 
     // Formater la réponse sans révéler les réponses correctes

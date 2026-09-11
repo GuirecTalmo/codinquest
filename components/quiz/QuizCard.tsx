@@ -1,6 +1,6 @@
 import { Difficulty } from '@prisma/client';
 import Link from 'next/link';
-import { CheckCircle2, Clock, Zap } from 'lucide-react';
+import { CheckCircle2, Clock, Lock, Zap } from 'lucide-react';
 
 interface QuizCardProps {
   quiz: {
@@ -14,6 +14,7 @@ interface QuizCardProps {
     attempted?: boolean;
   };
   levelName?: string;
+  locked?: boolean;
 }
 
 const difficultyConfig: Record<
@@ -37,15 +38,32 @@ const difficultyConfig: Record<
   },
 };
 
-export function QuizCard({ quiz, levelName }: QuizCardProps) {
+export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
   const difficulty = difficultyConfig[quiz.difficulty];
 
   return (
     <Link
-      href={`/dashboard/quiz/${quiz.id}`}
-      className="block group"
+      href={locked ? '#' : `/dashboard/quiz/${quiz.id}`}
+      onClick={(e) => {
+        if (locked) {
+          e.preventDefault();
+        }
+      }}
+      className={`block group relative ${locked ? 'cursor-not-allowed' : ''}`}
     >
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-gray-600 transition-all duration-200 hover:shadow-xl hover:-translate-y-1">
+      <div
+        className={`bg-gray-800 rounded-lg p-6 border border-gray-700 transition-all duration-200 ${
+          locked
+            ? 'opacity-60'
+            : 'hover:border-gray-600 hover:shadow-xl hover:-translate-y-1'
+        }`}
+      >
+        {locked && (
+          <div className="absolute inset-0 bg-gray-900/80 rounded-lg flex items-center justify-center z-10">
+            <Lock className="w-10 h-10 text-gray-500" />
+          </div>
+        )}
+
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
@@ -81,13 +99,19 @@ export function QuizCard({ quiz, levelName }: QuizCardProps) {
           </div>
 
           <div className="flex items-center gap-2">
-            {!quiz.attempted && !quiz.passed && (
+            {locked && (
+              <span className="px-2 py-1 bg-gray-700 text-gray-400 text-xs font-semibold rounded-full border border-gray-600 flex items-center gap-1">
+                <Lock className="w-3 h-3" />
+                Verrouillé
+              </span>
+            )}
+            {!locked && !quiz.attempted && !quiz.passed && (
               <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/50 flex items-center gap-1">
                 <Zap className="w-3 h-3" />
                 Nouveau
               </span>
             )}
-            {quiz.passed && (
+            {!locked && quiz.passed && (
               <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs font-semibold rounded-full border border-green-500/50">
                 ✓ Réussi
               </span>

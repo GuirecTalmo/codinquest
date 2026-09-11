@@ -5,7 +5,8 @@ import { DivisionBadge } from '@/components/quiz/DivisionBadge';
 import { ProgressBar } from '@/components/quiz/ProgressBar';
 import { StatCard } from '@/components/quiz/StatCard';
 import { QuizCard } from '@/components/quiz/QuizCard';
-import { Trophy, CheckCircle2, Target, Loader2, AlertCircle } from 'lucide-react';
+import { isDivisionAtLeast } from '@/lib/quiz/divisions';
+import { Trophy, CheckCircle2, Target, Loader2, AlertCircle, Lock } from 'lucide-react';
 import { Division } from '@prisma/client';
 
 interface UserProfile {
@@ -169,46 +170,57 @@ export default function DashboardPage() {
       <section>
         <h2 className="text-xl font-bold text-white mb-4">Niveaux</h2>
         <div className="space-y-8">
-          {levels.map((level) => (
-            <div key={level.id} className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <div className="mb-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <h3 className="text-xl font-bold text-white">{level.name}</h3>
-                  <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded">
-                    Niveau {level.order}
-                  </span>
+          {levels.map((level) => {
+            const locked = !isDivisionAtLeast(profile.stats.division, level.minDivision);
+
+            return (
+              <div key={level.id} className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+                <div className="mb-4">
+                  <div className="flex items-center gap-3 mb-2 flex-wrap">
+                    <h3 className="text-xl font-bold text-white">{level.name}</h3>
+                    <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded">
+                      Niveau {level.order}
+                    </span>
+                    {locked && (
+                      <span className="flex items-center gap-1 text-xs text-red-400 bg-red-500/20 border border-red-500/50 px-2 py-1 rounded-full">
+                        <Lock className="w-3 h-3" />
+                        Division {level.minDivision} requise
+                      </span>
+                    )}
+                  </div>
+                  {level.description && (
+                    <p className="text-gray-400 text-sm">{level.description}</p>
+                  )}
                 </div>
-                {level.description && (
-                  <p className="text-gray-400 text-sm">{level.description}</p>
+
+                {level.quizzes.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {level.quizzes.map((quiz) => (
+                      <QuizCard
+                        key={quiz.id}
+                        quiz={{
+                          id: quiz.id,
+                          title: quiz.title,
+                          description: quiz.description,
+                          difficulty: quiz.difficulty,
+                          timeLimit: quiz.timeLimit,
+                          passingScore: quiz.passingScore,
+                          passed: false, // À déterminer depuis l'historique
+                          attempted: false, // À déterminer depuis l'historique
+                        }}
+                        levelName={level.name}
+                        locked={locked}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-400 text-center py-8">
+                    Aucun quiz disponible pour ce niveau
+                  </p>
                 )}
               </div>
-
-              {level.quizzes.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {level.quizzes.map((quiz) => (
-                    <QuizCard
-                      key={quiz.id}
-                      quiz={{
-                        id: quiz.id,
-                        title: quiz.title,
-                        description: quiz.description,
-                        difficulty: quiz.difficulty,
-                        timeLimit: quiz.timeLimit,
-                        passingScore: quiz.passingScore,
-                        passed: false, // À déterminer depuis l'historique
-                        attempted: false, // À déterminer depuis l'historique
-                      }}
-                      levelName={level.name}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-400 text-center py-8">
-                  Aucun quiz disponible pour ce niveau
-                </p>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>

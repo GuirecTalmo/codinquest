@@ -25,6 +25,11 @@ export function getDivisionColor(division: Division): string {
   return colors[division];
 }
 
+// Vérifie si la division actuelle est au moins égale à la division requise
+export function isDivisionAtLeast(current: Division, required: Division): boolean {
+  return DIVISIONS_ORDER.indexOf(current) >= DIVISIONS_ORDER.indexOf(required);
+}
+
 // Obtenir la division suivante
 export function getNextDivision(currentDivision: Division): Division | null {
   const currentIndex = DIVISIONS_ORDER.indexOf(currentDivision);

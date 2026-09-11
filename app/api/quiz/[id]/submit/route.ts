@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { quizSubmissionSchema } from '@/lib/quiz/validations';
 import { calculateScore, checkIfPassed } from '@/lib/quiz/score';
+import { DIVISIONS_ORDER, isDivisionAtLeast } from '@/lib/quiz/divisions';
 import { Division } from '@prisma/client';
 
 export async function POST(
@@ -45,6 +46,9 @@ export async function POST(
     const quiz = await prisma.quiz.findUnique({
       where: { id: quizId },
       include: {
+        level: {
+          select: { minDivision: true },
+        },
         questions: {
           include: {
             answers: {
@@ -60,6 +64,19 @@ export async function POST(
       return NextResponse.json(
         { error: 'Quiz non trouvé' },
         { status: 404 }
+      );
+    }
+
+    // Vérifier que la division de l'utilisateur permet d'accéder à ce niveau
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { division: true },
+    });
+
+    if (!user || !isDivisionAtLeast(user.division, quiz.level.minDivision)) {
+      return NextResponse.json(
+        { error: 'Division insuffisante pour accéder à ce quiz' },
+        { status: 403 }
       );
     }
 
@@ -106,46 +123,50 @@ export async function POST(
         })),
       });
 
-      // Si réussi, incrémenter divisionPoints et mettre à jour les stats
-      const updateData: {
-        quizzesCompleted: { increment: number };
-        totalScore: { increment: number };
-        divisionPoints?: { increment: number };
-      } = {
-        quizzesCompleted: { increment: 1 },
-        totalScore: { increment: pointsEarned },
-      };
-
+      // Les stats agrégées (score total, division, quiz complétés) ne sont
+      // créditées qu'à la toute première réussite de ce quiz par cet
+      // utilisateur — rejouer un quiz déjà réussi (ou échouer) ne doit rien
+      // ajouter, sous peine de pouvoir farmer le classement et les divisions.
+      let isFirstPass = false;
       if (isPassed) {
-        updateData.divisionPoints = { increment: 1 };
+        const priorPass = await tx.quizAttempt.findFirst({
+          where: { userId, quizId, isPassed: true, id: { not: attempt.id } },
+          select: { id: true },
+        });
+        isFirstPass = !priorPass;
       }
 
-      const updatedUser = await tx.user.update({
-        where: { id: userId },
-        data: updateData,
-        select: {
-          division: true,
-          divisionPoints: true,
-        },
-      });
-
-      // Vérifier si promotion nécessaire (après incrément, divisionPoints peut être >= 3)
       let newDivision: string | null = null;
-      if (isPassed && updatedUser.divisionPoints >= 3) {
-        const currentDivision = updatedUser.division;
-        // Vérifier et promouvoir si nécessaire
-        const divisionOrder = ['BRONZE', 'SILVER', 'GOLD', 'PLATINE', 'DIAMOND', 'MASTER', 'CHALLENGER'];
-        const currentIndex = divisionOrder.indexOf(currentDivision as Division);
-        if (currentIndex < divisionOrder.length - 1) {
-          const nextDivision = divisionOrder[currentIndex + 1] as Division;
-          await tx.user.update({
-            where: { id: userId },
-            data: {
-              division: nextDivision,
-              divisionPoints: 0,
-            },
-          });
-          newDivision = nextDivision;
+
+      if (isFirstPass) {
+        const updatedUser = await tx.user.update({
+          where: { id: userId },
+          data: {
+            quizzesCompleted: { increment: 1 },
+            totalScore: { increment: pointsEarned },
+            divisionPoints: { increment: 1 },
+          },
+          select: {
+            division: true,
+            divisionPoints: true,
+          },
+        });
+
+        // Vérifier si promotion nécessaire (après incrément, divisionPoints peut être >= 3)
+        if (updatedUser.divisionPoints >= 3) {
+          const currentDivision = updatedUser.division;
+          const currentIndex = DIVISIONS_ORDER.indexOf(currentDivision as Division);
+          if (currentIndex < DIVISIONS_ORDER.length - 1) {
+            const nextDivision = DIVISIONS_ORDER[currentIndex + 1] as Division;
+            await tx.user.update({
+              where: { id: userId },
+              data: {
+                division: nextDivision,
+                divisionPoints: 0,
+              },
+            });
+            newDivision = nextDivision;
+          }
         }
       }
 
