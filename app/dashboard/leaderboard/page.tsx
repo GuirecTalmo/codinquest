@@ -17,8 +17,7 @@ import { Division } from '@prisma/client';
 interface LeaderboardEntry {
   rank: number;
   id: string;
-  name: string | null;
-  email: string;
+  name: string;
   division: string;
   totalScore: number;
   quizzesCompleted: number;
@@ -169,7 +168,7 @@ export default function LeaderboardPage() {
                   <div className="text-6xl mb-3">{medalEmojis[1]}</div>
                   <div className="text-white font-bold text-lg mb-2">#{top3[1].rank}</div>
                   <div className="text-white font-semibold text-xl mb-2 truncate">
-                    {top3[1].name || top3[1].email.split('@')[0]}
+                    {top3[1].name}
                   </div>
                   <div className="mb-3">
                     <DivisionBadge
@@ -202,7 +201,7 @@ export default function LeaderboardPage() {
                   <div className="text-7xl mb-4">{medalEmojis[0]}</div>
                   <div className="text-white font-bold text-xl mb-3">#{top3[0].rank}</div>
                   <div className="text-white font-bold text-2xl mb-3 truncate">
-                    {top3[0].name || top3[0].email.split('@')[0]}
+                    {top3[0].name}
                   </div>
                   <div className="mb-4">
                     <DivisionBadge
@@ -232,7 +231,7 @@ export default function LeaderboardPage() {
                   <div className="text-6xl mb-3">{medalEmojis[2]}</div>
                   <div className="text-white font-bold text-lg mb-2">#{top3[2].rank}</div>
                   <div className="text-white font-semibold text-xl mb-2 truncate">
-                    {top3[2].name || top3[2].email.split('@')[0]}
+                    {top3[2].name}
                   </div>
                   <div className="mb-3">
                     <DivisionBadge

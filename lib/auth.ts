@@ -3,6 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { prisma } from './prisma';
 import bcrypt from 'bcryptjs';
 import { loginSchema } from './quiz/validations';
+import { rateLimit } from './rate-limit';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -25,6 +26,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!validationResult.success) {
           throw new Error('Format email ou mot de passe invalide');
+        }
+
+        // Limiter les tentatives de connexion par email pour empêcher le
+        // brute force / credential stuffing, avant toute requête DB.
+        const emailKey = (credentials.email as string).toLowerCase();
+        const { success } = rateLimit(`login:${emailKey}`, 5, 15 * 60 * 1000);
+        if (!success) {
+          throw new Error('Trop de tentatives, réessayez dans quelques minutes');
         }
 
         // Rechercher l'utilisateur dans la base de données

@@ -5,8 +5,7 @@ import { DivisionBadge } from './DivisionBadge';
 interface LeaderboardEntry {
   rank: number;
   id: string;
-  name: string | null;
-  email: string;
+  name: string;
   division: string;
   totalScore: number;
   quizzesCompleted: number;
@@ -87,10 +86,7 @@ export function LeaderboardTable({
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-white">
-                          {entry.name || 'Utilisateur anonyme'}
-                        </span>
-                        <span className="text-xs text-gray-400">
-                          {entry.email}
+                          {entry.name}
                         </span>
                         {entry.isCurrentUser && (
                           <span className="text-xs text-blue-400 font-semibold mt-1">

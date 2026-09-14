@@ -2,11 +2,22 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { signupSchema } from '@/lib/quiz/validations';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
 export async function POST(request: Request) {
   try {
+    // Limiter les inscriptions par IP pour empêcher la création de comptes en masse
+    const ip = getClientIp(request);
+    const { success, retryAfterSeconds } = rateLimit(`signup:${ip}`, 5, 15 * 60 * 1000);
+    if (!success) {
+      return NextResponse.json(
+        { success: false, error: 'Trop de tentatives, réessayez plus tard' },
+        { status: 429, headers: { 'Retry-After': String(retryAfterSeconds) } }
+      );
+    }
+
     const body = await request.json();
-    
+
     // Valider les données avec Zod
     const validationResult = signupSchema.safeParse(body);
     

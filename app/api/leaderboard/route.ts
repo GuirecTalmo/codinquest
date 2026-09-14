@@ -6,9 +6,17 @@ import { Division } from '@prisma/client';
 
 export async function GET(request: Request) {
   try {
-    // Récupérer la session utilisateur (optionnel, pour marquer l'utilisateur actuel)
+    // Le classement n'est visible que par les utilisateurs connectés
     const session = await auth();
-    const currentUserId = session?.user?.id as string | undefined;
+
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Non authentifié' },
+        { status: 401 }
+      );
+    }
+
+    const currentUserId = session.user.id as string;
 
     // Récupérer les query params
     const { searchParams } = new URL(request.url);
@@ -51,15 +59,16 @@ export async function GET(request: Request) {
     const paginatedUsers = sortedUsers.slice(skip, skip + limit);
 
     // Formater la réponse avec le rank
+    // L'email n'est jamais exposé au client : seul un nom d'affichage
+    // (nom choisi, ou pseudonyme dérivé de l'email en repli) est renvoyé.
     const leaderboard = paginatedUsers.map((user, index) => ({
       rank: skip + index + 1, // Rank commence à 1 (skip + index + 1)
       id: user.id,
-      name: user.name,
-      email: user.email,
+      name: user.name || user.email.split('@')[0],
       division: user.division,
       totalScore: user.totalScore,
       quizzesCompleted: user.quizzesCompleted,
-      isCurrentUser: currentUserId ? user.id === currentUserId : false,
+      isCurrentUser: user.id === currentUserId,
     }));
 
     return NextResponse.json({

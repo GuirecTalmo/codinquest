@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { quizSubmissionSchema } from '@/lib/quiz/validations';
 import { calculateScore, checkIfPassed } from '@/lib/quiz/score';
 import { DIVISIONS_ORDER, isDivisionAtLeast } from '@/lib/quiz/divisions';
+import { rateLimit } from '@/lib/rate-limit';
 import { Division } from '@prisma/client';
 
 export async function POST(
@@ -23,6 +24,15 @@ export async function POST(
 
     const userId = session.user.id as string;
     const { id: quizId } = await params;
+
+    // Limiter le nombre de soumissions par utilisateur pour empêcher le spam
+    const { success, retryAfterSeconds } = rateLimit(`submit:${userId}`, 20, 60 * 1000);
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives, réessayez plus tard' },
+        { status: 429, headers: { 'Retry-After': String(retryAfterSeconds) } }
+      );
+    }
 
     // Récupérer le body de la requête
     const body = await request.json();
