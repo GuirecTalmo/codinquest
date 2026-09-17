@@ -18,10 +18,13 @@ export async function GET(request: Request) {
 
     const currentUserId = session.user.id as string;
 
-    // Récupérer les query params
+    // Récupérer les query params (limit plafonné pour éviter un dump complet)
+    const MAX_LIMIT = 100;
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '100', 10);
-    const skip = parseInt(searchParams.get('skip') || '0', 10);
+    const rawLimit = parseInt(searchParams.get('limit') || '100', 10);
+    const rawSkip = parseInt(searchParams.get('skip') || '0', 10);
+    const limit = Number.isNaN(rawLimit) ? 100 : Math.min(Math.max(rawLimit, 1), MAX_LIMIT);
+    const skip = Number.isNaN(rawSkip) ? 0 : Math.max(rawSkip, 0);
 
     // Récupérer tous les utilisateurs avec leurs statistiques
     const users = await prisma.user.findMany({

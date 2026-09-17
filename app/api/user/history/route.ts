@@ -16,10 +16,12 @@ export async function GET(request: Request) {
 
     const userId = session.user.id as string;
 
-    // Récupérer les query params
+    // Récupérer les query params (limit plafonné pour éviter un dump complet)
+    const MAX_LIMIT = 100;
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status'); // 'passed' | 'failed'
-    const limit = parseInt(searchParams.get('limit') || '20', 10);
+    const rawLimit = parseInt(searchParams.get('limit') || '20', 10);
+    const limit = Number.isNaN(rawLimit) ? 20 : Math.min(Math.max(rawLimit, 1), MAX_LIMIT);
 
     // Construire les filtres
     const where: {
