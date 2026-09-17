@@ -1,14 +1,11 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { QuizCard } from '@/components/quiz/QuizCard';
+import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+import { getLevelById } from '@/lib/data/levels';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
 import { isDivisionAtLeast } from '@/lib/quiz/divisions';
 import {
-  Loader2,
-  AlertCircle,
   ChevronRight,
   Home,
   Lock,
@@ -16,158 +13,40 @@ import {
   XCircle,
   TrendingUp,
 } from 'lucide-react';
-import { Division, Difficulty } from '@prisma/client';
-
-interface Quiz {
-  id: string;
-  title: string;
-  description: string | null;
-  difficulty: Difficulty;
-  timeLimit: number | null;
-  passingScore: number;
-  questionCount: number;
-}
-
-interface Level {
-  id: string;
-  name: string;
-  description: string | null;
-  order: number;
-  minDivision: Division;
-  quizzes: Quiz[];
-}
-
-interface LevelData {
-  levels: Level[];
-}
 
 interface Attempt {
-  id: string;
   quizId: string;
   score: number;
   isPassed: boolean;
 }
 
-export default function LevelPage({ params }: { params: Promise<{ id: string }> }) {
-  const router = useRouter();
-  const [level, setLevel] = useState<Level | null>(null);
-  const [attempts, setAttempts] = useState<Attempt[]>([]);
-  const [userDivision, setUserDivision] = useState<Division | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [levelId, setLevelId] = useState<string | null>(null);
+export default async function LevelPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await auth();
 
-  // Récupérer l'ID du niveau depuis les params
-  useEffect(() => {
-    params.then((resolvedParams) => {
-      setLevelId(resolvedParams.id);
-    });
-  }, [params]);
-
-  useEffect(() => {
-    if (!levelId) return;
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Récupérer les niveaux et l'historique en parallèle
-        const [levelsRes, historyRes, profileRes] = await Promise.all([
-          fetch('/api/levels'),
-          fetch('/api/user/history'),
-          fetch('/api/user/profile'),
-        ]);
-
-        if (!levelsRes.ok) {
-          throw new Error('Erreur lors du chargement des niveaux');
-        }
-
-        const levelsData: LevelData = await levelsRes.json();
-        const foundLevel = levelsData.levels.find((l) => l.id === levelId);
-
-        if (!foundLevel) {
-          setError('Niveau non trouvé');
-          setLoading(false);
-          return;
-        }
-
-        setLevel(foundLevel);
-
-        // Récupérer l'historique pour déterminer quels quiz sont réussis
-        if (historyRes.ok) {
-          const historyData = await historyRes.json();
-          const quizAttempts = historyData.attempts.map((attempt: any) => ({
-            id: attempt.id,
-            quizId: attempt.quiz.id,
-            score: attempt.score,
-            isPassed: attempt.isPassed,
-          }));
-          setAttempts(quizAttempts);
-        }
-
-        // Récupérer la division de l'utilisateur
-        if (profileRes.ok) {
-          const profileData = await profileRes.json();
-          setUserDivision(profileData.stats.division);
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Une erreur est survenue');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [levelId]);
-
-  const getQuizStatus = (quizId: string) => {
-    const quizAttempts = attempts.filter((a) => a.quizId === quizId);
-    if (quizAttempts.length === 0) return { attempted: false, passed: false, bestScore: null };
-    
-    const passedAttempts = quizAttempts.filter((a) => a.isPassed);
-    const bestAttempt = quizAttempts.reduce((best, current) => 
-      current.score > best.score ? current : best
-    );
-
-    return {
-      attempted: true,
-      passed: passedAttempts.length > 0,
-      bestScore: bestAttempt.score,
-    };
-  };
-
-  const isLevelLocked = (): boolean => {
-    if (!level || !userDivision) return false;
-
-    return !isDivisionAtLeast(userDivision, level.minDivision);
-  };
-
-  const getPassedQuizzesCount = (): number => {
-    if (!level) return 0;
-    return level.quizzes.filter((quiz) => {
-      const status = getQuizStatus(quiz.id);
-      return status.passed;
-    }).length;
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-400">Chargement du niveau...</p>
-        </div>
-      </div>
-    );
+  if (!session?.user?.id) {
+    redirect('/auth/signin');
   }
 
-  if (error || !level) {
+  const userId = session.user.id as string;
+  const { id: levelId } = await params;
+
+  const [level, attempts, user] = await Promise.all([
+    getLevelById(levelId),
+    prisma.quizAttempt.findMany({
+      where: { userId },
+      select: { quizId: true, score: true, isPassed: true },
+    }),
+    prisma.user.findUnique({
+      where: { id: userId },
+      select: { division: true },
+    }),
+  ]);
+
+  if (!level) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <p className="text-red-400 mb-4">{error || 'Niveau non trouvé'}</p>
+          <p className="text-red-400 mb-4">Niveau non trouvé</p>
           <Link
             href="/dashboard"
             className="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
@@ -179,10 +58,28 @@ export default function LevelPage({ params }: { params: Promise<{ id: string }> 
     );
   }
 
-  const locked = isLevelLocked();
-  const passedCount = getPassedQuizzesCount();
-  const progressPercentage = level.quizzes.length > 0 
-    ? (passedCount / level.quizzes.length) * 100 
+  const userDivision = user?.division ?? null;
+
+  const getQuizStatus = (quizId: string, quizAttempts: Attempt[]) => {
+    const relevant = quizAttempts.filter((a) => a.quizId === quizId);
+    if (relevant.length === 0) return { attempted: false, passed: false, bestScore: null as number | null };
+
+    const passedAttempts = relevant.filter((a) => a.isPassed);
+    const bestAttempt = relevant.reduce((best, current) =>
+      current.score > best.score ? current : best
+    );
+
+    return {
+      attempted: true,
+      passed: passedAttempts.length > 0,
+      bestScore: bestAttempt.score,
+    };
+  };
+
+  const locked = userDivision ? !isDivisionAtLeast(userDivision, level.minDivision) : false;
+  const passedCount = level.quizzes.filter((quiz) => getQuizStatus(quiz.id, attempts).passed).length;
+  const progressPercentage = level.quizzes.length > 0
+    ? (passedCount / level.quizzes.length) * 100
     : 0;
 
   return (
@@ -272,7 +169,7 @@ export default function LevelPage({ params }: { params: Promise<{ id: string }> 
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {level.quizzes.map((quiz) => {
-              const status = getQuizStatus(quiz.id);
+              const status = getQuizStatus(quiz.id, attempts);
 
               return (
                 <div
@@ -354,31 +251,26 @@ export default function LevelPage({ params }: { params: Promise<{ id: string }> 
                     </div>
                   )}
 
-                  <Link
-                    href={locked ? '#' : `/dashboard/quiz/${quiz.id}`}
-                    onClick={(e) => {
-                      if (locked) {
-                        e.preventDefault();
-                      }
-                    }}
-                    className={`block w-full text-center px-4 py-2 rounded-lg font-semibold transition-colors ${
-                      locked
-                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                        : status.passed
-                        ? 'bg-green-600 hover:bg-green-700 text-white'
-                        : status.attempted
-                        ? 'bg-orange-600 hover:bg-orange-700 text-white'
-                        : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
-                  >
-                    {locked
-                      ? 'Verrouillé'
-                      : status.passed
-                      ? 'Refaire'
-                      : status.attempted
-                      ? 'Réessayer'
-                      : 'Commencer'}
-                  </Link>
+                  {/* Verrouillé : pas de Link du tout (plutôt qu'un onClick qui
+                      intercepte la navigation), pour rester un Server Component */}
+                  {locked ? (
+                    <div className="block w-full text-center px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-500 cursor-not-allowed">
+                      Verrouillé
+                    </div>
+                  ) : (
+                    <Link
+                      href={`/dashboard/quiz/${quiz.id}`}
+                      className={`block w-full text-center px-4 py-2 rounded-lg font-semibold transition-colors ${
+                        status.passed
+                          ? 'bg-green-600 hover:bg-green-700 text-white'
+                          : status.attempted
+                          ? 'bg-orange-600 hover:bg-orange-700 text-white'
+                          : 'bg-blue-600 hover:bg-blue-700 text-white'
+                      }`}
+                    >
+                      {status.passed ? 'Refaire' : status.attempted ? 'Réessayer' : 'Commencer'}
+                    </Link>
+                  )}
                 </div>
               );
             })}
@@ -388,4 +280,3 @@ export default function LevelPage({ params }: { params: Promise<{ id: string }> 
     </div>
   );
 }
-

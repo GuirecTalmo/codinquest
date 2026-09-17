@@ -18,36 +18,37 @@ export interface LevelData {
   }[];
 }
 
-// Partagé entre /api/levels et les pages Server Component qui affichent les
-// niveaux, pour ne garder qu'un seul endroit où le formatage est fait.
-export async function getLevels(): Promise<LevelData[]> {
-  const levels = await prisma.level.findMany({
-    orderBy: {
-      order: 'asc',
+const quizSelect = {
+  id: true,
+  title: true,
+  description: true,
+  difficulty: true,
+  timeLimit: true,
+  passingScore: true,
+  _count: {
+    select: {
+      questions: true,
     },
-    include: {
-      quizzes: {
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          difficulty: true,
-          timeLimit: true,
-          passingScore: true,
-          _count: {
-            select: {
-              questions: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: 'asc',
-        },
-      },
-    },
-  });
+  },
+} as const;
 
-  return levels.map((level) => ({
+function formatLevel(level: {
+  id: string;
+  name: string;
+  description: string | null;
+  order: number;
+  minDivision: Division;
+  quizzes: {
+    id: string;
+    title: string;
+    description: string | null;
+    difficulty: Difficulty;
+    timeLimit: number | null;
+    passingScore: number;
+    _count: { questions: number };
+  }[];
+}): LevelData {
+  return {
     id: level.id,
     name: level.name,
     description: level.description,
@@ -62,5 +63,41 @@ export async function getLevels(): Promise<LevelData[]> {
       passingScore: quiz.passingScore,
       questionCount: quiz._count.questions,
     })),
-  }));
+  };
+}
+
+// Partagé entre /api/levels et les pages Server Component qui affichent les
+// niveaux, pour ne garder qu'un seul endroit où le formatage est fait.
+export async function getLevels(): Promise<LevelData[]> {
+  const levels = await prisma.level.findMany({
+    orderBy: {
+      order: 'asc',
+    },
+    include: {
+      quizzes: {
+        select: quizSelect,
+        orderBy: {
+          createdAt: 'asc',
+        },
+      },
+    },
+  });
+
+  return levels.map(formatLevel);
+}
+
+export async function getLevelById(id: string): Promise<LevelData | null> {
+  const level = await prisma.level.findUnique({
+    where: { id },
+    include: {
+      quizzes: {
+        select: quizSelect,
+        orderBy: {
+          createdAt: 'asc',
+        },
+      },
+    },
+  });
+
+  return level ? formatLevel(level) : null;
 }
