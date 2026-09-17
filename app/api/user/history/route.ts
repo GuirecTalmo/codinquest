@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { getUserHistory } from '@/lib/data/history';
 
 export async function GET(request: Request) {
   try {
@@ -23,69 +23,14 @@ export async function GET(request: Request) {
     const rawLimit = parseInt(searchParams.get('limit') || '20', 10);
     const limit = Number.isNaN(rawLimit) ? 20 : Math.min(Math.max(rawLimit, 1), MAX_LIMIT);
 
-    // Construire les filtres
-    const where: {
-      userId: string;
-      isPassed?: boolean;
-    } = {
-      userId,
-    };
-
-    if (status === 'passed') {
-      where.isPassed = true;
-    } else if (status === 'failed') {
-      where.isPassed = false;
-    }
-
-    // Récupérer l'historique des tentatives
-    const attempts = await prisma.quizAttempt.findMany({
-      where,
-      take: limit,
-      orderBy: {
-        completedAt: 'desc',
-      },
-      include: {
-        quiz: {
-          include: {
-            level: {
-              select: {
-                id: true,
-                name: true,
-                order: true,
-              },
-            },
-          },
-        },
-      },
+    const formattedAttempts = await getUserHistory(userId, {
+      status: status === 'passed' || status === 'failed' ? status : null,
+      limit,
     });
-
-    // Formater la réponse
-    const formattedAttempts = attempts.map((attempt) => ({
-      id: attempt.id,
-      score: attempt.score,
-      pointsEarned: attempt.pointsEarned,
-      totalPoints: attempt.totalPoints,
-      isPassed: attempt.isPassed,
-      timeSpent: attempt.timeSpent,
-      startedAt: attempt.startedAt,
-      completedAt: attempt.completedAt,
-      quiz: {
-        id: attempt.quiz.id,
-        title: attempt.quiz.title,
-        description: attempt.quiz.description,
-        difficulty: attempt.quiz.difficulty,
-        passingScore: attempt.quiz.passingScore,
-        level: {
-          id: attempt.quiz.level.id,
-          name: attempt.quiz.level.name,
-          order: attempt.quiz.level.order,
-        },
-      },
-    }));
 
     return NextResponse.json({
       attempts: formattedAttempts,
-      total: attempts.length,
+      total: formattedAttempts.length,
     });
   } catch (error) {
     console.error('Erreur lors de la récupération de l\'historique:', error);
@@ -95,4 +40,3 @@ export async function GET(request: Request) {
     );
   }
 }
-
