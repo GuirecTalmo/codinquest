@@ -154,7 +154,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
                   Quiz échoué
                 </h2>
                 <p className="text-gray-400">
-                  Dommage, vous n'avez pas atteint le score minimum requis.
+                  Dommage, vous n&apos;avez pas atteint le score minimum requis.
                 </p>
               </>
             )}

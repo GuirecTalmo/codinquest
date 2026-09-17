@@ -89,7 +89,7 @@ export default function SignUpPage() {
 
       // Rediriger vers la page de connexion après inscription réussie
       router.push('/auth/signin?registered=true');
-    } catch (err) {
+    } catch {
       setApiError('Une erreur est survenue lors de l\'inscription');
       setIsLoading(false);
     }

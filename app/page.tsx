@@ -4,10 +4,10 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Trophy, Zap, Target, TrendingUp, ArrowRight, LogIn } from 'lucide-react';
+import { Trophy, Target, TrendingUp, ArrowRight, LogIn } from 'lucide-react';
 
 export default function Home() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function Home() {
               href="/auth/signin"
               className="flex items-center justify-center gap-2 px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-semibold text-lg transition-colors border-2 border-gray-700"
             >
-              J'ai déjà un compte
+              J&apos;ai déjà un compte
             </Link>
           </div>
 

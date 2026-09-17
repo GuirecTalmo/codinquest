@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function SignInPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
@@ -42,7 +42,7 @@ export default function SignInPage() {
         router.push(callbackUrl);
         router.refresh();
       }
-    } catch (err) {
+    } catch {
       setError('Une erreur est survenue lors de la connexion');
       setIsLoading(false);
     }
@@ -120,7 +120,7 @@ export default function SignInPage() {
                 href="/auth/signup"
                 className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
               >
-                S'inscrire
+                S&apos;inscrire
               </Link>
             </p>
           </div>

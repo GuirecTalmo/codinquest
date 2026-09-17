@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Créer l'utilisateur avec division BRONZE par défaut (défini dans le schéma Prisma)
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email,
         password: hashedPassword,

@@ -1,10 +1,11 @@
+import { Division } from '@prisma/client';
 import { DivisionBadge } from './DivisionBadge';
 
 interface LeaderboardEntry {
   rank: number;
   id: string;
   name: string;
-  division: string;
+  division: Division;
   totalScore: number;
   quizzesCompleted: number;
   isCurrentUser: boolean;
@@ -12,12 +13,10 @@ interface LeaderboardEntry {
 
 interface LeaderboardTableProps {
   leaderboard: LeaderboardEntry[];
-  currentUserId?: string | null;
 }
 
 export function LeaderboardTable({
   leaderboard,
-  currentUserId,
 }: LeaderboardTableProps) {
   const getMedal = (rank: number) => {
     if (rank === 1) return '🥇';
@@ -95,7 +94,7 @@ export function LeaderboardTable({
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <DivisionBadge
-                        division={entry.division as any}
+                        division={entry.division}
                         size="sm"
                       />
                     </td>

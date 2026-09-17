@@ -85,7 +85,7 @@ export default async function LeaderboardPage() {
                   </div>
                   {top3[1].isCurrentUser && (
                     <div className="mt-3 px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
-                      C'est toi !
+                      C&apos;est toi !
                     </div>
                   )}
                 </div>
@@ -118,7 +118,7 @@ export default async function LeaderboardPage() {
                   </div>
                   {top3[0].isCurrentUser && (
                     <div className="mt-4 px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full">
-                      C'est toi !
+                      C&apos;est toi !
                     </div>
                   )}
                 </div>
@@ -148,7 +148,7 @@ export default async function LeaderboardPage() {
                   </div>
                   {top3[2].isCurrentUser && (
                     <div className="mt-3 px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
-                      C'est toi !
+                      C&apos;est toi !
                     </div>
                   )}
                 </div>
@@ -165,10 +165,7 @@ export default async function LeaderboardPage() {
             <Medal className="w-6 h-6 text-gray-400" />
             Classement complet
           </h2>
-          <LeaderboardTable
-            leaderboard={restOfLeaderboard}
-            currentUserId={currentUserId}
-          />
+          <LeaderboardTable leaderboard={restOfLeaderboard} />
         </div>
       )}
 
