@@ -1,125 +1,27 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
+import { getLeaderboard, getUserRank } from '@/lib/data/leaderboard';
 import { LeaderboardTable } from '@/components/quiz/LeaderboardTable';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
-import {
-  Loader2,
-  AlertCircle,
-  Trophy,
-  Medal,
-  Crown,
-  TrendingUp,
-  User,
-} from 'lucide-react';
-import { Division } from '@prisma/client';
+import { Trophy, Medal, Crown, TrendingUp, User } from 'lucide-react';
 
-interface LeaderboardEntry {
-  rank: number;
-  id: string;
-  name: string;
-  division: string;
-  totalScore: number;
-  quizzesCompleted: number;
-  isCurrentUser: boolean;
-}
+export default async function LeaderboardPage() {
+  const session = await auth();
 
-interface LeaderboardData {
-  leaderboard: LeaderboardEntry[];
-  total: number;
-  limit: number;
-  skip: number;
-}
-
-export default function LeaderboardPage() {
-  const [leaderboardData, setLeaderboardData] = useState<LeaderboardData | null>(null);
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [userPosition, setUserPosition] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetchLeaderboardData();
-  }, []);
-
-  const fetchLeaderboardData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Récupérer le profil utilisateur pour connaître l'ID
-      const profileRes = await fetch('/api/user/profile');
-      if (profileRes.ok) {
-        const profileData = await profileRes.json();
-        setCurrentUserId(profileData.user.id);
-      }
-
-      // Récupérer le leaderboard
-      const leaderboardRes = await fetch('/api/leaderboard?limit=100');
-      if (!leaderboardRes.ok) {
-        throw new Error('Erreur lors du chargement du classement');
-      }
-
-      const data: LeaderboardData = await leaderboardRes.json();
-      setLeaderboardData(data);
-
-      // Trouver la position de l'utilisateur
-      const currentUserEntry = data.leaderboard.find((entry) => entry.isCurrentUser);
-      if (currentUserEntry) {
-        setUserPosition(currentUserEntry.rank);
-      } else {
-        // Si l'utilisateur n'est pas dans le top 100, récupérer toutes les entrées
-        const allRes = await fetch('/api/leaderboard?limit=1000');
-        if (allRes.ok) {
-          const allData = await allRes.json();
-          const userEntry = allData.leaderboard.find(
-            (entry: LeaderboardEntry) => entry.id === currentUserId
-          );
-          if (userEntry) {
-            setUserPosition(userEntry.rank);
-          }
-        }
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
-          <p className="text-gray-400">Chargement du classement...</p>
-        </div>
-      </div>
-    );
+  if (!session?.user?.id) {
+    redirect('/auth/signin');
   }
 
-  if (error || !leaderboardData) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <p className="text-red-400 mb-4">{error || 'Erreur de chargement'}</p>
-          <button
-            onClick={fetchLeaderboardData}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          >
-            Réessayer
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const currentUserId = session.user.id as string;
 
-  const top3 = leaderboardData.leaderboard.slice(0, 3);
-  const restOfLeaderboard = leaderboardData.leaderboard.slice(3);
-  const currentUserEntry = leaderboardData.leaderboard.find(
-    (entry) => entry.isCurrentUser
-  );
+  const [{ leaderboard, total }, userPosition] = await Promise.all([
+    getLeaderboard({ skip: 0, limit: 100, currentUserId }),
+    getUserRank(currentUserId),
+  ]);
+
+  const top3 = leaderboard.slice(0, 3);
+  const restOfLeaderboard = leaderboard.slice(3);
+  const currentUserEntry = leaderboard.find((entry) => entry.isCurrentUser);
 
   const podiumColors = [
     'from-yellow-500 to-amber-600', // Or (1er)
@@ -127,7 +29,6 @@ export default function LeaderboardPage() {
     'from-amber-600 to-amber-800', // Bronze (3e)
   ];
 
-  const podiumHeights = ['h-48', 'h-40', 'h-44']; // Plus haut, moyen, plus bas
   const medalEmojis = ['🥇', '🥈', '🥉'];
 
   return (
@@ -141,7 +42,7 @@ export default function LeaderboardPage() {
         <div className="flex items-center justify-center gap-6 text-gray-400">
           <div className="flex items-center gap-2">
             <User className="w-5 h-5" />
-            <span>{leaderboardData.total} joueur{leaderboardData.total > 1 ? 's' : ''}</span>
+            <span>{total} joueur{total > 1 ? 's' : ''}</span>
           </div>
           {userPosition && (
             <div className="flex items-center gap-2">
@@ -159,7 +60,7 @@ export default function LeaderboardPage() {
             <Crown className="w-6 h-6 text-yellow-500" />
             Top 3
           </h2>
-          
+
           <div className="flex items-end justify-center gap-4 mb-6">
             {/* 2ème place */}
             {top3[1] && (
@@ -172,7 +73,7 @@ export default function LeaderboardPage() {
                   </div>
                   <div className="mb-3">
                     <DivisionBadge
-                      division={top3[1].division as Division}
+                      division={top3[1].division}
                       size="sm"
                     />
                   </div>
@@ -205,7 +106,7 @@ export default function LeaderboardPage() {
                   </div>
                   <div className="mb-4">
                     <DivisionBadge
-                      division={top3[0].division as Division}
+                      division={top3[0].division}
                       size="md"
                     />
                   </div>
@@ -235,7 +136,7 @@ export default function LeaderboardPage() {
                   </div>
                   <div className="mb-3">
                     <DivisionBadge
-                      division={top3[2].division as Division}
+                      division={top3[2].division}
                       size="sm"
                     />
                   </div>
@@ -271,13 +172,13 @@ export default function LeaderboardPage() {
         </div>
       )}
 
-      {/* Position actuelle si > 100 */}
-      {userPosition && userPosition > 100 && !currentUserEntry && (
+      {/* Position actuelle si hors du top affiché (au-delà de la première page) */}
+      {userPosition && !currentUserEntry && (
         <div className="sticky bottom-0 bg-gray-800 border-t-2 border-blue-500 rounded-t-lg p-4 shadow-xl z-10">
           <div className="flex items-center justify-center gap-3">
             <Trophy className="w-5 h-5 text-yellow-500" />
             <span className="text-white font-semibold">
-              Tu es classé #{userPosition} sur {leaderboardData.total} joueurs
+              Tu es classé #{userPosition} sur {total} joueurs
             </span>
             <TrendingUp className="w-5 h-5 text-blue-400" />
           </div>
@@ -286,4 +187,3 @@ export default function LeaderboardPage() {
     </div>
   );
 }
-

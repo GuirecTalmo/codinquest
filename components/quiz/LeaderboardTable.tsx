@@ -1,5 +1,3 @@
-'use client';
-
 import { DivisionBadge } from './DivisionBadge';
 
 interface LeaderboardEntry {
