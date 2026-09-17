@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { DIVISIONS_ORDER } from '@/lib/quiz/divisions';
-import { Division } from '@prisma/client';
 
 export async function GET(request: Request) {
   try {
@@ -26,45 +24,33 @@ export async function GET(request: Request) {
     const limit = Number.isNaN(rawLimit) ? 100 : Math.min(Math.max(rawLimit, 1), MAX_LIMIT);
     const skip = Number.isNaN(rawSkip) ? 0 : Math.max(rawSkip, 0);
 
-    // Récupérer tous les utilisateurs avec leurs statistiques
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        division: true,
-        totalScore: true,
-        quizzesCompleted: true,
-      },
-      orderBy: [
-        // Ordre personnalisé pour la division (sera trié après)
-        { totalScore: 'desc' },
-      ],
-    });
-
-    // Trier les utilisateurs par division puis par totalScore
-    // CHALLENGER > MASTER > DIAMOND > PLATINE > GOLD > SILVER > BRONZE
-    const sortedUsers = users.sort((a, b) => {
-      // Obtenir l'index de la division dans l'ordre
-      const aDivisionIndex = DIVISIONS_ORDER.indexOf(a.division);
-      const bDivisionIndex = DIVISIONS_ORDER.indexOf(b.division);
-
-      // Si les divisions sont différentes, trier par division (ordre décroissant)
-      if (aDivisionIndex !== bDivisionIndex) {
-        return bDivisionIndex - aDivisionIndex; // Ordre décroissant
-      }
-
-      // Si même division, trier par totalScore (ordre décroissant)
-      return b.totalScore - a.totalScore;
-    });
-
-    // Appliquer la pagination
-    const paginatedUsers = sortedUsers.slice(skip, skip + limit);
+    // Le tri par division s'appuie sur l'ordre natif de l'enum Postgres
+    // (BRONZE=1 ... CHALLENGER=7, déclaré dans ce même ordre dans schema.prisma) :
+    // { division: 'desc' } place donc CHALLENGER en tête, comme DIVISIONS_ORDER.
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          division: true,
+          totalScore: true,
+          quizzesCompleted: true,
+        },
+        orderBy: [
+          { division: 'desc' },
+          { totalScore: 'desc' },
+        ],
+        skip,
+        take: limit,
+      }),
+      prisma.user.count(),
+    ]);
 
     // Formater la réponse avec le rank
     // L'email n'est jamais exposé au client : seul un nom d'affichage
     // (nom choisi, ou pseudonyme dérivé de l'email en repli) est renvoyé.
-    const leaderboard = paginatedUsers.map((user, index) => ({
+    const leaderboard = users.map((user, index) => ({
       rank: skip + index + 1, // Rank commence à 1 (skip + index + 1)
       id: user.id,
       name: user.name || user.email.split('@')[0],
@@ -76,7 +62,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       leaderboard,
-      total: users.length,
+      total,
       limit,
       skip,
     });
