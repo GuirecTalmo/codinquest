@@ -41,16 +41,7 @@ const difficultyConfig: Record<
 export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
   const difficulty = difficultyConfig[quiz.difficulty];
 
-  return (
-    <Link
-      href={locked ? '#' : `/dashboard/quiz/${quiz.id}`}
-      onClick={(e) => {
-        if (locked) {
-          e.preventDefault();
-        }
-      }}
-      className={`block group relative ${locked ? 'cursor-not-allowed' : ''}`}
-    >
+  const cardBody = (
       <div
         className={`bg-gray-800 rounded-lg p-6 border border-gray-700 transition-all duration-200 ${
           locked
@@ -125,6 +116,20 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
           </div>
         )}
       </div>
+  );
+
+  // Verrouillé : pas de Link du tout (plutôt qu'un onClick qui intercepte la
+  // navigation) pour que ce composant reste un Server Component, y compris
+  // rendu depuis une page serveur.
+  if (locked) {
+    return (
+      <div className="block group relative cursor-not-allowed">{cardBody}</div>
+    );
+  }
+
+  return (
+    <Link href={`/dashboard/quiz/${quiz.id}`} className="block group relative">
+      {cardBody}
     </Link>
   );
 }
