@@ -1,4 +1,5 @@
 export type PixelIconName =
+  | 'Mail'
   | 'CheckCircle2'
   | 'XCircle'
   | 'Lock'
@@ -49,6 +50,28 @@ export function PixelIcon({ name, className }: PixelIconProps) {
 
 function renderRects(name: PixelIconName) {
   switch (name) {
+    case 'Mail':
+      return (
+        <>
+          <rect x={0} y={0} width={8} height={1} />
+          <rect x={0} y={1} width={1} height={1} />
+          <rect x={2} y={1} width={1} height={1} />
+          <rect x={5} y={1} width={1} height={1} />
+          <rect x={7} y={1} width={1} height={1} />
+          <rect x={0} y={2} width={1} height={1} />
+          <rect x={3} y={2} width={2} height={1} />
+          <rect x={7} y={2} width={1} height={1} />
+          <rect x={0} y={3} width={1} height={1} />
+          <rect x={7} y={3} width={1} height={1} />
+          <rect x={0} y={4} width={1} height={1} />
+          <rect x={7} y={4} width={1} height={1} />
+          <rect x={0} y={5} width={1} height={1} />
+          <rect x={7} y={5} width={1} height={1} />
+          <rect x={0} y={6} width={1} height={1} />
+          <rect x={7} y={6} width={1} height={1} />
+          <rect x={0} y={7} width={8} height={1} />
+        </>
+      );
     case 'CheckCircle2':
       return (
         <>

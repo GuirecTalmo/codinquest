@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
+import { PixelIcon } from '@/components/PixelIcon';
 
 export default function SignInPage() {
   const { status } = useSession();
@@ -52,7 +54,16 @@ export default function SignInPage() {
     <div className="min-h-screen flex items-center justify-center bg-bg p-4">
       <div className="w-full max-w-md">
         <div className="bg-surface border-[3px] border-border shadow-hard p-8">
-          <div className="text-center mb-8">
+          <div className="flex flex-col items-center text-center mb-8">
+            <Image
+              src="/icons/chest-closed-48.png"
+              alt=""
+              aria-hidden="true"
+              width={48}
+              height={48}
+              unoptimized
+              className="w-12 h-12 mb-3 [image-rendering:pixelated]"
+            />
             <h1 className="text-3xl font-display font-bold text-text-primary mb-2">
               Bienvenue
             </h1>
@@ -63,7 +74,8 @@ export default function SignInPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-error-surface border-[3px] border-error text-error px-4 py-3 text-sm">
+              <div className="flex items-center gap-2 bg-error-surface border-[3px] border-error text-error px-4 py-3 text-sm">
+                <PixelIcon name="AlertCircle" className="w-4 h-4 flex-shrink-0" />
                 {error}
               </div>
             )}
@@ -71,8 +83,9 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium uppercase tracking-wide text-text-secondary mb-2"
+                className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-text-secondary mb-2"
               >
+                <PixelIcon name="Mail" className="w-4 h-4" />
                 Email
               </label>
               <input
@@ -89,8 +102,9 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium uppercase tracking-wide text-text-secondary mb-2"
+                className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-text-secondary mb-2"
               >
+                <PixelIcon name="Lock" className="w-4 h-4" />
                 Mot de passe
               </label>
               <input
