@@ -1,5 +1,6 @@
 import { Division } from '@prisma/client';
 import { DivisionBadge } from './DivisionBadge';
+import { RankMedal } from './RankMedal';
 
 interface LeaderboardEntry {
   rank: number;
@@ -18,10 +19,8 @@ interface LeaderboardTableProps {
 export function LeaderboardTable({
   leaderboard,
 }: LeaderboardTableProps) {
-  const getMedal = (rank: number) => {
-    if (rank === 1) return '🥇';
-    if (rank === 2) return '🥈';
-    if (rank === 3) return '🥉';
+  const getMedalRank = (rank: number): 1 | 2 | 3 | null => {
+    if (rank === 1 || rank === 2 || rank === 3) return rank;
     return null;
   };
 
@@ -51,7 +50,7 @@ export function LeaderboardTable({
             </thead>
             <tbody className="bg-surface divide-y-[3px] divide-border">
               {leaderboard.map((entry, index) => {
-                const medal = getMedal(entry.rank);
+                const medalRank = getMedalRank(entry.rank);
                 const isEven = index % 2 === 0;
 
                 return (
@@ -71,8 +70,8 @@ export function LeaderboardTable({
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        {medal ? (
-                          <span className="text-2xl">{medal}</span>
+                        {medalRank ? (
+                          <RankMedal rank={medalRank} className="w-8 h-8" />
                         ) : (
                           <span className="text-sm font-medium text-text-secondary">
                             #{entry.rank}

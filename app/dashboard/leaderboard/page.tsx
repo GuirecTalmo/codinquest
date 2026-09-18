@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { getLeaderboard, getUserRank } from '@/lib/data/leaderboard';
 import { LeaderboardTable } from '@/components/quiz/LeaderboardTable';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
+import { RankMedal } from '@/components/quiz/RankMedal';
 import { PixelIcon } from '@/components/PixelIcon';
 
 export default async function LeaderboardPage() {
@@ -30,8 +31,6 @@ export default async function LeaderboardPage() {
     'bg-gray-400 border-ink text-on-ink', // Argent (2e)
     'bg-amber-700 border-ink text-on-ink', // Bronze (3e)
   ];
-
-  const medalEmojis = ['🥇', '🥈', '🥉'];
 
   return (
     <div className="space-y-8">
@@ -68,7 +67,7 @@ export default async function LeaderboardPage() {
             {top3[1] && (
               <div className="flex-1 max-w-[280px]">
                 <div className={`border-[3px] shadow-hard p-6 text-center ${podiumStyles[1]}`}>
-                  <div className="text-6xl mb-3">{medalEmojis[1]}</div>
+                  <RankMedal rank={2} className="w-16 h-16 mx-auto mb-3" />
                   <div className="font-bold text-lg mb-2">#{top3[1].rank}</div>
                   <div className="font-semibold text-xl mb-2 truncate">
                     {top3[1].name}
@@ -101,7 +100,7 @@ export default async function LeaderboardPage() {
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <PixelIcon name="Crown" className="w-8 h-8 text-accent" />
                   </div>
-                  <div className="text-7xl mb-4">{medalEmojis[0]}</div>
+                  <RankMedal rank={1} className="w-20 h-20 mx-auto mb-4" />
                   <div className="font-bold text-xl mb-3">#{top3[0].rank}</div>
                   <div className="font-bold text-2xl mb-3 truncate">
                     {top3[0].name}
@@ -131,7 +130,7 @@ export default async function LeaderboardPage() {
             {top3[2] && (
               <div className="flex-1 max-w-[280px]">
                 <div className={`border-[3px] shadow-hard p-6 text-center ${podiumStyles[2]}`}>
-                  <div className="text-6xl mb-3">{medalEmojis[2]}</div>
+                  <RankMedal rank={3} className="w-16 h-16 mx-auto mb-3" />
                   <div className="font-bold text-lg mb-2">#{top3[2].rank}</div>
                   <div className="font-semibold text-xl mb-2 truncate">
                     {top3[2].name}
