@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
 import { LayoutDashboard, History, Trophy, LogOut, User } from 'lucide-react';
 import { Division } from '@prisma/client';
@@ -62,9 +63,15 @@ export default function DashboardLayout({
           <div className="flex items-center justify-between h-16">
             {/* Logo / Titre */}
             <Link href="/dashboard" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-accent border-[3px] border-accent-border flex items-center justify-center">
-                <Trophy className="w-6 h-6 text-on-accent" />
-              </div>
+              <Image
+                src="/icons/chest-closed-48.png"
+                alt=""
+                aria-hidden="true"
+                width={48}
+                height={48}
+                unoptimized
+                className="w-10 h-10 [image-rendering:pixelated]"
+              />
               <span className="text-xl font-display font-bold text-on-ink hidden sm:block">
                 CodeInQuest
               </span>

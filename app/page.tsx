@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Trophy, Target, TrendingUp, ArrowRight, LogIn } from 'lucide-react';
 
 export default function Home() {
@@ -32,9 +33,15 @@ export default function Home() {
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-accent border-[3px] border-accent-border flex items-center justify-center">
-            <Trophy className="w-6 h-6 text-on-accent" />
-          </div>
+          <Image
+            src="/icons/chest-closed-48.png"
+            alt=""
+            aria-hidden="true"
+            width={48}
+            height={48}
+            unoptimized
+            className="w-10 h-10 [image-rendering:pixelated]"
+          />
           <span className="text-2xl font-display font-bold text-text-primary">CodeInQuest</span>
         </div>
         <Link
