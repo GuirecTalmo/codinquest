@@ -220,8 +220,18 @@ export function HistoryList({ attempts }: { attempts: Attempt[] }) {
               <div className="mt-4 pt-4 border-t-[3px] border-border">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs text-text-secondary">Score</span>
-                  <span className="text-xs text-text-secondary">
-                    {attempt.score >= attempt.quiz.passingScore ? '✓ Réussi' : '✗ Échoué'}
+                  <span className="text-xs text-text-secondary flex items-center gap-1">
+                    {attempt.score >= attempt.quiz.passingScore ? (
+                      <>
+                        <PixelIcon name="CheckCircle2" className="w-3 h-3" />
+                        Réussi
+                      </>
+                    ) : (
+                      <>
+                        <PixelIcon name="XCircle" className="w-3 h-3" />
+                        Échoué
+                      </>
+                    )}
                   </span>
                 </div>
                 <div className="relative w-full bg-surface-dimmed border-[3px] border-border h-2 overflow-hidden">

@@ -103,8 +103,9 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
               </span>
             )}
             {!locked && quiz.passed && (
-              <span className="px-2 py-1 bg-success-surface text-success text-xs font-semibold uppercase tracking-wide border-[3px] border-success">
-                ✓ Réussi
+              <span className="px-2 py-1 bg-success-surface text-success text-xs font-semibold uppercase tracking-wide border-[3px] border-success flex items-center gap-1">
+                <PixelIcon name="CheckCircle2" className="w-3 h-3" />
+                Réussi
               </span>
             )}
           </div>
