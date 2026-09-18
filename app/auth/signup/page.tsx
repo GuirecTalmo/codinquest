@@ -221,9 +221,16 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-accent border-[3px] border-accent-border text-on-accent font-semibold py-3 px-4 shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0"
+              className="w-full flex items-center justify-center gap-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold py-3 px-4 shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0"
             >
-              {isLoading ? 'Inscription...' : "S'inscrire"}
+              {isLoading ? (
+                'Inscription...'
+              ) : (
+                <>
+                  S&apos;inscrire
+                  <PixelIcon name="ArrowRight" className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 

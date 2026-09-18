@@ -247,13 +247,14 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
                   {/* Verrouillé : pas de Link du tout (plutôt qu'un onClick qui
                       intercepte la navigation), pour rester un Server Component */}
                   {locked ? (
-                    <div className="block w-full text-center px-4 py-2 border-[3px] border-border font-semibold bg-surface-dimmed text-text-secondary cursor-not-allowed">
+                    <div className="flex items-center justify-center gap-2 w-full text-center px-4 py-2 border-[3px] border-border font-semibold bg-surface-dimmed text-text-secondary cursor-not-allowed">
+                      <PixelIcon name="Lock" className="w-4 h-4" />
                       Verrouillé
                     </div>
                   ) : (
                     <Link
                       href={`/dashboard/quiz/${quiz.id}`}
-                      className={`block w-full text-center px-4 py-2 border-[3px] font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all ${
+                      className={`flex items-center justify-center gap-2 w-full text-center px-4 py-2 border-[3px] font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all ${
                         status.passed
                           ? 'bg-success border-success text-on-state'
                           : status.attempted
@@ -261,7 +262,22 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
                           : 'bg-accent border-accent-border text-on-accent'
                       }`}
                     >
-                      {status.passed ? 'Refaire' : status.attempted ? 'Réessayer' : 'Commencer'}
+                      {status.passed ? (
+                        <>
+                          Refaire
+                          <PixelIcon name="RotateCcw" className="w-4 h-4" />
+                        </>
+                      ) : status.attempted ? (
+                        <>
+                          Réessayer
+                          <PixelIcon name="RotateCcw" className="w-4 h-4" />
+                        </>
+                      ) : (
+                        <>
+                          Commencer
+                          <PixelIcon name="ArrowRight" className="w-4 h-4" />
+                        </>
+                      )}
                     </Link>
                   )}
                 </div>
