@@ -188,10 +188,12 @@ export async function POST(
       return { attempt, newDivision };
     });
 
-    // Préparer les réponses correctes pour le retour
+    // Préparer les réponses correctes pour le retour -- l'explication n'est
+    // envoyée qu'ici, jamais avant soumission (voir getQuizForUser).
     const correctAnswers = quiz.questions.map((q) => ({
       questionId: q.id,
       correctAnswerId: q.answers[0]?.id || null,
+      explanation: q.explanation,
     }));
 
     return NextResponse.json({

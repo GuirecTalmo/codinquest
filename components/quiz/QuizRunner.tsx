@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuizQuestion } from '@/components/quiz/QuizQuestion';
 import { QuizTimer } from '@/components/quiz/QuizTimer';
+import { QuizReview } from '@/components/quiz/QuizReview';
 import type { QuizForUser } from '@/lib/data/quiz';
 import { PixelIcon } from '@/components/PixelIcon';
 
@@ -17,6 +18,7 @@ interface SubmissionResult {
   correctAnswers: Array<{
     questionId: string;
     correctAnswerId: string;
+    explanation: string | null;
   }>;
 }
 
@@ -186,6 +188,15 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
             <div className="text-sm text-text-secondary text-center">
               Score minimum requis : {quiz.passingScore}%
             </div>
+          </div>
+
+          <h3 className="text-lg font-display font-bold text-text-primary mb-4">Correction</h3>
+          <div className="mb-6">
+            <QuizReview
+              questions={quiz.questions}
+              userAnswers={userAnswers}
+              correctAnswers={result.correctAnswers}
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">

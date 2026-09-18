@@ -150,8 +150,8 @@ export default function Home() {
             <div>
               <h3 className="text-xl font-display font-bold text-text-primary mb-2">Quiz Variés</h3>
               <p className="text-text-secondary">
-                Des quiz de difficulté progressive sur différents thèmes.
-                Culture générale, sciences, histoire et plus encore !
+                HTML, CSS, JavaScript, React, Vue.js, Web Perf, IA — de quoi
+                préparer vos entretiens techniques front-end.
               </p>
             </div>
           </div>

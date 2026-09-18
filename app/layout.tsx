@@ -17,7 +17,7 @@ const silkscreen = Silkscreen({
 
 export const metadata: Metadata = {
   title: "CodeInQuest",
-  description: "Relevez des quiz, montez en divisions, progressez en développement front-end.",
+  description: "Entraînez-vous aux entretiens techniques front-end (HTML, CSS, JavaScript, React, Vue.js...) et progressez en divisions.",
 };
 
 export default function RootLayout({

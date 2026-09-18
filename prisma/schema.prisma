@@ -92,6 +92,7 @@ model Question {
   id          String   @id @default(cuid())
   quizId      String
   question    String
+  explanation String?  // Explication affichée après soumission (jamais avant : voir getQuizForUser)
   order       Int      // Ordre d'affichage dans le quiz
   points      Int      @default(1) // Points attribués pour cette question
   

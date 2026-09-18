@@ -1,5 +1,7 @@
 'use client';
 
+import { renderInlineCode } from './InlineCode';
+
 interface Answer {
   id: string;
   text: string;
@@ -39,7 +41,7 @@ export function QuizQuestion({
           </span>
         </div>
         <h3 className="text-xl font-semibold text-text-primary mb-4">
-          {question.question}
+          {renderInlineCode(question.question)}
         </h3>
       </div>
 
@@ -74,7 +76,7 @@ export function QuizQuestion({
                   isSelected ? 'text-text-primary' : 'text-text-secondary'
                 }`}
               >
-                {answer.text}
+                {renderInlineCode(answer.text)}
               </span>
             </button>
           );
