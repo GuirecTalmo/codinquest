@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth';
 import { getLeaderboard, getUserRank } from '@/lib/data/leaderboard';
 import { LeaderboardTable } from '@/components/quiz/LeaderboardTable';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
-import { Trophy, Medal, Crown, TrendingUp, User } from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 
 export default async function LeaderboardPage() {
   const session = await auth();
@@ -38,17 +38,17 @@ export default async function LeaderboardPage() {
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-display font-bold text-text-primary mb-2 flex items-center justify-center gap-3">
-          <Trophy className="w-10 h-10 text-accent" />
+          <PixelIcon name="Trophy" className="w-10 h-10 text-accent" />
           Classement Mondial
         </h1>
         <div className="flex items-center justify-center gap-6 text-text-secondary">
           <div className="flex items-center gap-2">
-            <User className="w-5 h-5" />
+            <PixelIcon name="User" className="w-5 h-5" />
             <span>{total} joueur{total > 1 ? 's' : ''}</span>
           </div>
           {userPosition && (
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5" />
+              <PixelIcon name="TrendingUp" className="w-5 h-5" />
               <span>Tu es classé #{userPosition}</span>
             </div>
           )}
@@ -59,7 +59,7 @@ export default async function LeaderboardPage() {
       {top3.length > 0 && (
         <div className="bg-surface border-[3px] border-accent-border shadow-hard p-8">
           <h2 className="text-2xl font-display font-bold text-text-primary mb-6 text-center flex items-center justify-center gap-2">
-            <Crown className="w-6 h-6 text-accent" />
+            <PixelIcon name="Crown" className="w-6 h-6 text-accent" />
             Top 3
           </h2>
 
@@ -99,7 +99,7 @@ export default async function LeaderboardPage() {
               <div className="flex-1 max-w-[300px]">
                 <div className={`border-[3px] shadow-hard p-8 text-center relative ${podiumStyles[0]}`}>
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <Crown className="w-8 h-8 text-accent" />
+                    <PixelIcon name="Crown" className="w-8 h-8 text-accent" />
                   </div>
                   <div className="text-7xl mb-4">{medalEmojis[0]}</div>
                   <div className="font-bold text-xl mb-3">#{top3[0].rank}</div>
@@ -164,7 +164,7 @@ export default async function LeaderboardPage() {
       {restOfLeaderboard.length > 0 && (
         <div>
           <h2 className="text-2xl font-display font-bold text-text-primary mb-4 flex items-center gap-2">
-            <Medal className="w-6 h-6 text-text-secondary" />
+            <PixelIcon name="Medal" className="w-6 h-6 text-text-secondary" />
             Classement complet
           </h2>
           <LeaderboardTable leaderboard={restOfLeaderboard} />
@@ -175,11 +175,11 @@ export default async function LeaderboardPage() {
       {userPosition && !currentUserEntry && (
         <div className="sticky bottom-0 bg-surface border-[3px] border-accent shadow-hard p-4 z-10">
           <div className="flex items-center justify-center gap-3">
-            <Trophy className="w-5 h-5 text-accent" />
+            <PixelIcon name="Trophy" className="w-5 h-5 text-accent" />
             <span className="text-text-primary font-semibold">
               Tu es classé #{userPosition} sur {total} joueurs
             </span>
-            <TrendingUp className="w-5 h-5 text-accent" />
+            <PixelIcon name="TrendingUp" className="w-5 h-5 text-accent" />
           </div>
         </div>
       )}

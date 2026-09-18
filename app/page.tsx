@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trophy, Target, TrendingUp, ArrowRight, LogIn } from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 
 export default function Home() {
   const { status } = useSession();
@@ -48,7 +48,7 @@ export default function Home() {
           href="/auth/signin"
           className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
         >
-          <LogIn className="w-4 h-4" />
+          <PixelIcon name="LogIn" className="w-4 h-4" />
           Se connecter
         </Link>
       </nav>
@@ -75,7 +75,7 @@ export default function Home() {
               className="flex items-center justify-center gap-2 px-8 py-4 bg-accent border-[3px] border-accent-border text-on-accent font-semibold text-lg shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
             >
               Commencer
-              <ArrowRight className="w-5 h-5" />
+              <PixelIcon name="ArrowRight" className="w-5 h-5" />
             </Link>
             <Link
               href="/auth/signin"
@@ -89,7 +89,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
             <div className="bg-surface border-[3px] border-border shadow-hard p-6">
               <div className="w-12 h-12 bg-surface-dimmed border-[3px] border-border flex items-center justify-center mb-4 mx-auto">
-                <Trophy className="w-6 h-6 text-accent" />
+                <PixelIcon name="Trophy" className="w-6 h-6 text-accent" />
               </div>
               <h3 className="text-xl font-display font-bold text-text-primary mb-2">Système de Divisions</h3>
               <p className="text-text-secondary">
@@ -100,7 +100,7 @@ export default function Home() {
 
             <div className="bg-surface border-[3px] border-border shadow-hard p-6">
               <div className="w-12 h-12 bg-surface-dimmed border-[3px] border-border flex items-center justify-center mb-4 mx-auto">
-                <Target className="w-6 h-6 text-accent" />
+                <PixelIcon name="Target" className="w-6 h-6 text-accent" />
               </div>
               <h3 className="text-xl font-display font-bold text-text-primary mb-2">Quiz Variés</h3>
               <p className="text-text-secondary">
@@ -111,7 +111,7 @@ export default function Home() {
 
             <div className="bg-surface border-[3px] border-border shadow-hard p-6">
               <div className="w-12 h-12 bg-surface-dimmed border-[3px] border-border flex items-center justify-center mb-4 mx-auto">
-                <TrendingUp className="w-6 h-6 text-accent" />
+                <PixelIcon name="TrendingUp" className="w-6 h-6 text-accent" />
               </div>
               <h3 className="text-xl font-display font-bold text-text-primary mb-2">Suivi de Progression</h3>
               <p className="text-text-secondary">

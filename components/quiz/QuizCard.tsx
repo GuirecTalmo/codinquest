@@ -1,6 +1,6 @@
 import { Difficulty } from '@prisma/client';
 import Link from 'next/link';
-import { CheckCircle2, Clock, Lock, Zap } from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 
 interface QuizCardProps {
   quiz: {
@@ -51,7 +51,7 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
       >
         {locked && (
           <div className="absolute inset-0 bg-ink/80 flex items-center justify-center z-10">
-            <Lock className="w-10 h-10 text-text-secondary" />
+            <PixelIcon name="Lock" className="w-10 h-10 text-text-secondary" />
           </div>
         )}
 
@@ -67,7 +67,7 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
             )}
           </div>
           {quiz.passed && (
-            <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0 ml-3" />
+            <PixelIcon name="CheckCircle2" className="w-6 h-6 text-success flex-shrink-0 ml-3" />
           )}
         </div>
 
@@ -80,7 +80,7 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
             </span>
             {quiz.timeLimit && (
               <div className="flex items-center gap-1 text-text-secondary text-xs">
-                <Clock className="w-4 h-4" />
+                <PixelIcon name="Clock" className="w-4 h-4" />
                 <span>{Math.floor(quiz.timeLimit / 60)} min</span>
               </div>
             )}
@@ -92,13 +92,13 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
           <div className="flex items-center gap-2">
             {locked && (
               <span className="px-2 py-1 bg-surface-dimmed text-text-secondary text-xs font-semibold uppercase tracking-wide border-[3px] border-border-dimmed flex items-center gap-1">
-                <Lock className="w-3 h-3" />
+                <PixelIcon name="Lock" className="w-3 h-3" />
                 Verrouillé
               </span>
             )}
             {!locked && !quiz.attempted && !quiz.passed && (
               <span className="px-2 py-1 bg-accent text-on-accent text-xs font-semibold uppercase tracking-wide border-[3px] border-accent-border flex items-center gap-1">
-                <Zap className="w-3 h-3" />
+                <PixelIcon name="Zap" className="w-3 h-3" />
                 Nouveau
               </span>
             )}

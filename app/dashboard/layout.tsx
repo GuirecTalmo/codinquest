@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
-import { LayoutDashboard, History, Trophy, LogOut, User } from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 import { Division } from '@prisma/client';
 
 export default function DashboardLayout({
@@ -42,9 +42,9 @@ export default function DashboardLayout({
   };
 
   const navItems = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/dashboard/history', label: 'Historique', icon: History },
-    { href: '/dashboard/leaderboard', label: 'Classement', icon: Trophy },
+    { href: '/dashboard', label: 'Dashboard', icon: 'LayoutDashboard' as const },
+    { href: '/dashboard/history', label: 'Historique', icon: 'History' as const },
+    { href: '/dashboard/leaderboard', label: 'Classement', icon: 'Trophy' as const },
   ];
 
   const isActive = (href: string) => {
@@ -80,7 +80,6 @@ export default function DashboardLayout({
             {/* Navigation Links */}
             <div className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
-                const Icon = item.icon;
                 const active = isActive(item.href);
                 return (
                   <Link
@@ -92,7 +91,7 @@ export default function DashboardLayout({
                         : 'text-on-ink/70 hover:bg-white/10 hover:text-on-ink'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <PixelIcon name={item.icon} className="w-4 h-4" />
                     {item.label}
                   </Link>
                 );
@@ -104,7 +103,7 @@ export default function DashboardLayout({
               {session?.user && (
                 <div className="hidden sm:flex items-center gap-3">
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-surface border-[3px] border-border">
-                    <User className="w-4 h-4 text-text-secondary" />
+                    <PixelIcon name="User" className="w-4 h-4 text-text-secondary" />
                     <span className="text-sm font-medium text-text-primary">
                       {session.user.name || session.user.email}
                     </span>
@@ -118,7 +117,7 @@ export default function DashboardLayout({
                 onClick={handleSignOut}
                 className="flex items-center gap-2 px-4 py-2 bg-error border-[3px] border-error text-on-state text-sm font-medium uppercase tracking-wide shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
               >
-                <LogOut className="w-4 h-4" />
+                <PixelIcon name="LogOut" className="w-4 h-4" />
                 <span className="hidden sm:inline">Déconnexion</span>
               </button>
             </div>
@@ -129,7 +128,6 @@ export default function DashboardLayout({
         <div className="md:hidden border-t-[3px] border-border/40 px-4 py-2">
           <div className="flex items-center justify-around gap-1">
             {navItems.map((item) => {
-              const Icon = item.icon;
               const active = isActive(item.href);
               return (
                 <Link
@@ -141,7 +139,7 @@ export default function DashboardLayout({
                       : 'text-on-ink/60 hover:bg-white/10 hover:text-on-ink'
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
+                  <PixelIcon name={item.icon} className="w-5 h-5" />
                   {item.label}
                 </Link>
               );

@@ -2,15 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  CheckCircle2,
-  XCircle,
-  Clock,
-  Trophy,
-  ArrowRight,
-  Calendar,
-  TrendingUp,
-} from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 import { Difficulty } from '@prisma/client';
 
 interface Attempt {
@@ -125,7 +117,7 @@ export function HistoryList({ attempts }: { attempts: Attempt[] }) {
       {/* Liste des tentatives */}
       {filteredAttempts.length === 0 ? (
         <div className="bg-surface border-[3px] border-border shadow-hard p-12 text-center">
-          <Trophy className="w-16 h-16 text-text-secondary mx-auto mb-4" />
+          <PixelIcon name="Trophy" className="w-16 h-16 text-text-secondary mx-auto mb-4" />
           <h2 className="text-xl font-display font-bold text-text-primary mb-2">
             {attempts.length === 0
               ? 'Aucun quiz complété pour le moment'
@@ -142,7 +134,7 @@ export function HistoryList({ attempts }: { attempts: Attempt[] }) {
               className="inline-flex items-center gap-2 px-6 py-3 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
             >
               Commencer un quiz
-              <ArrowRight className="w-4 h-4" />
+              <PixelIcon name="ArrowRight" className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -162,9 +154,9 @@ export function HistoryList({ attempts }: { attempts: Attempt[] }) {
                 <div className="flex-1">
                   <div className="flex items-start gap-3 mb-3">
                     {attempt.isPassed ? (
-                      <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0 mt-1" />
+                      <PixelIcon name="CheckCircle2" className="w-6 h-6 text-success flex-shrink-0 mt-1" />
                     ) : (
-                      <XCircle className="w-6 h-6 text-error flex-shrink-0 mt-1" />
+                      <PixelIcon name="XCircle" className="w-6 h-6 text-error flex-shrink-0 mt-1" />
                     )}
                     <div className="flex-1">
                       <h3 className="text-lg font-display font-bold text-text-primary mb-1">
@@ -172,7 +164,7 @@ export function HistoryList({ attempts }: { attempts: Attempt[] }) {
                       </h3>
                       <div className="flex flex-wrap items-center gap-3 text-sm text-text-secondary">
                         <span className="flex items-center gap-1">
-                          <Trophy className="w-4 h-4" />
+                          <PixelIcon name="Trophy" className="w-4 h-4" />
                           {attempt.quiz.level.name}
                         </span>
                         <span
@@ -189,12 +181,12 @@ export function HistoryList({ attempts }: { attempts: Attempt[] }) {
                   {/* Métadonnées */}
                   <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary ml-9">
                     <span className="flex items-center gap-1">
-                      <Calendar className="w-4 h-4" />
+                      <PixelIcon name="Calendar" className="w-4 h-4" />
                       {formatDate(attempt.completedAt)}
                     </span>
                     {attempt.timeSpent && (
                       <span className="flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
+                        <PixelIcon name="Clock" className="w-4 h-4" />
                         {formatTimeSpent(attempt.timeSpent)}
                       </span>
                     )}
@@ -213,7 +205,7 @@ export function HistoryList({ attempts }: { attempts: Attempt[] }) {
                     {attempt.score}%
                   </div>
                   <div className="flex items-center gap-2 text-sm text-text-secondary">
-                    <TrendingUp className="w-4 h-4" />
+                    <PixelIcon name="TrendingUp" className="w-4 h-4" />
                     <span>
                       {attempt.pointsEarned}/{attempt.totalPoints} points
                     </span>

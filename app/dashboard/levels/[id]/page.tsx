@@ -5,14 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { getLevelById } from '@/lib/data/levels';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
 import { isDivisionAtLeast } from '@/lib/quiz/divisions';
-import {
-  ChevronRight,
-  Home,
-  Lock,
-  CheckCircle2,
-  XCircle,
-  TrendingUp,
-} from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 
 interface Attempt {
   quizId: string;
@@ -90,17 +83,17 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
           href="/dashboard"
           className="flex items-center gap-1 hover:text-text-primary transition-colors"
         >
-          <Home className="w-4 h-4" />
+          <PixelIcon name="Home" className="w-4 h-4" />
           Dashboard
         </Link>
-        <ChevronRight className="w-4 h-4" />
+        <PixelIcon name="ChevronRight" className="w-4 h-4" />
         <Link
           href="/dashboard"
           className="hover:text-text-primary transition-colors"
         >
           Niveaux
         </Link>
-        <ChevronRight className="w-4 h-4" />
+        <PixelIcon name="ChevronRight" className="w-4 h-4" />
         <span className="text-text-primary font-medium">{level.name}</span>
       </nav>
 
@@ -109,7 +102,7 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <div>
             <h1 className="text-3xl font-display font-bold text-text-primary mb-2 flex items-center gap-3">
-              {locked && <Lock className="w-8 h-8 text-error" />}
+              {locked && <PixelIcon name="Lock" className="w-8 h-8 text-error" />}
               {level.name}
             </h1>
             {level.description && (
@@ -126,7 +119,7 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
         {locked && (
           <div className="bg-error-surface border-[3px] border-error p-4 mb-4">
             <div className="flex items-center gap-2 text-error">
-              <Lock className="w-5 h-5" />
+              <PixelIcon name="Lock" className="w-5 h-5" />
               <span className="font-semibold">
                 Ce niveau est verrouillé. Vous devez atteindre la division {level.minDivision} pour y accéder.
               </span>
@@ -186,17 +179,17 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
                 >
                   {locked && (
                     <div className="absolute inset-0 bg-ink/80 flex items-center justify-center z-10">
-                      <Lock className="w-12 h-12 text-text-secondary" />
+                      <PixelIcon name="Lock" className="w-12 h-12 text-text-secondary" />
                     </div>
                   )}
 
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-xl font-display font-bold text-text-primary flex-1">{quiz.title}</h3>
                     {status.passed && (
-                      <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0 ml-2" />
+                      <PixelIcon name="CheckCircle2" className="w-6 h-6 text-success flex-shrink-0 ml-2" />
                     )}
                     {status.attempted && !status.passed && (
-                      <XCircle className="w-6 h-6 text-error flex-shrink-0 ml-2" />
+                      <PixelIcon name="XCircle" className="w-6 h-6 text-error flex-shrink-0 ml-2" />
                     )}
                   </div>
 
@@ -238,7 +231,7 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-text-secondary">Meilleur score</span>
                         <div className="flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3 text-accent" />
+                          <PixelIcon name="TrendingUp" className="w-3 h-3 text-accent" />
                           <span
                             className={`text-sm font-semibold ${
                               status.passed ? 'text-success' : 'text-error'

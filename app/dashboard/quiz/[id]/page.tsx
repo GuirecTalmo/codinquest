@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { getQuizForUser } from '@/lib/data/quiz';
 import { QuizRunner } from '@/components/quiz/QuizRunner';
-import { AlertCircle } from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 
 export default async function QuizPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -24,7 +24,7 @@ export default async function QuizPage({ params }: { params: Promise<{ id: strin
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <AlertCircle className="w-12 h-12 text-error mx-auto mb-4" />
+          <PixelIcon name="AlertCircle" className="w-12 h-12 text-error mx-auto mb-4" />
           <p className="text-error mb-4">{message}</p>
           <Link
             href="/dashboard"

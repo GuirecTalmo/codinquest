@@ -8,7 +8,7 @@ import { ProgressBar } from '@/components/quiz/ProgressBar';
 import { StatCard } from '@/components/quiz/StatCard';
 import { QuizCard } from '@/components/quiz/QuizCard';
 import { isDivisionAtLeast } from '@/lib/quiz/divisions';
-import { Trophy, CheckCircle2, Target, Lock } from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -71,19 +71,19 @@ export default async function DashboardPage() {
           <StatCard
             label="Score Total"
             value={profile.stats.totalScore.toLocaleString()}
-            icon={Trophy}
+            icon="Trophy"
             color="text-accent"
           />
           <StatCard
             label="Quiz Complétés"
             value={profile.stats.quizzesCompleted}
-            icon={CheckCircle2}
+            icon="CheckCircle2"
             color="text-success"
           />
           <StatCard
             label="Taux de Réussite"
             value={`${profile.stats.successRate}%`}
-            icon={Target}
+            icon="Target"
             color="text-accent"
           />
         </div>
@@ -106,7 +106,7 @@ export default async function DashboardPage() {
                     </span>
                     {locked && (
                       <span className="flex items-center gap-1 text-xs text-error bg-error-surface border-[3px] border-error px-2 py-1 uppercase tracking-wide">
-                        <Lock className="w-3 h-3" />
+                        <PixelIcon name="Lock" className="w-3 h-3" />
                         Division {level.minDivision} requise
                       </span>
                     )}

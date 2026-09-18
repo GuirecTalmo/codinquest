@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Clock, AlertCircle } from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 
 interface QuizTimerProps {
   timeLimit: number; // En secondes
@@ -59,9 +59,9 @@ export function QuizTimer({ timeLimit, onTimeUp, onTick }: QuizTimerProps) {
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             {timeLeft <= 30 ? (
-              <AlertCircle className="w-5 h-5 animate-pulse" />
+              <PixelIcon name="AlertCircle" className="w-5 h-5 animate-pulse" />
             ) : (
-              <Clock className="w-5 h-5" />
+              <PixelIcon name="Clock" className="w-5 h-5" />
             )}
             <span className="text-sm font-semibold uppercase tracking-wide">Temps restant</span>
           </div>

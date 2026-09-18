@@ -5,14 +5,7 @@ import { useRouter } from 'next/navigation';
 import { QuizQuestion } from '@/components/quiz/QuizQuestion';
 import { QuizTimer } from '@/components/quiz/QuizTimer';
 import type { QuizForUser } from '@/lib/data/quiz';
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  XCircle,
-  Trophy,
-  RotateCcw,
-} from 'lucide-react';
+import { PixelIcon } from '@/components/PixelIcon';
 
 interface SubmissionResult {
   success: boolean;
@@ -139,7 +132,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
             {result.isPassed ? (
               <>
                 <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center border-[3px] border-success bg-success-surface">
-                  <CheckCircle2 className="w-10 h-10 text-success" />
+                  <PixelIcon name="CheckCircle2" className="w-10 h-10 text-success" />
                 </div>
                 <h2 className="text-3xl font-display font-bold text-text-primary mb-2">
                   Quiz réussi !
@@ -151,7 +144,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
             ) : (
               <>
                 <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center border-[3px] border-error bg-error-surface">
-                  <XCircle className="w-10 h-10 text-error" />
+                  <PixelIcon name="XCircle" className="w-10 h-10 text-error" />
                 </div>
                 <h2 className="text-3xl font-display font-bold text-text-primary mb-2">
                   Quiz échoué
@@ -182,7 +175,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
             {result.division && (
               <div className="bg-accent border-[3px] border-accent-border p-4 mb-4">
                 <div className="flex items-center justify-center gap-2">
-                  <Trophy className="w-5 h-5 text-on-accent" />
+                  <PixelIcon name="Trophy" className="w-5 h-5 text-on-accent" />
                   <span className="text-on-accent font-semibold">
                     Promotion ! Vous êtes maintenant {result.division}
                   </span>
@@ -211,7 +204,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
               }}
               className="flex-1 px-4 py-3 bg-surface border-[3px] border-border text-text-primary font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all flex items-center justify-center gap-2"
             >
-              <RotateCcw className="w-4 h-4" />
+              <PixelIcon name="RotateCcw" className="w-4 h-4" />
               Recommencer
             </button>
           </div>
@@ -272,7 +265,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
           disabled={currentQuestionIndex === 0}
           className="flex items-center gap-2 px-4 py-2 bg-surface border-[3px] border-border disabled:opacity-50 disabled:cursor-not-allowed text-text-primary font-medium shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0 transition-all"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <PixelIcon name="ArrowLeft" className="w-4 h-4" />
           Précédent
         </button>
 
@@ -306,7 +299,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
             ) : (
               <>
                 Terminer le quiz
-                <CheckCircle2 className="w-4 h-4" />
+                <PixelIcon name="CheckCircle2" className="w-4 h-4" />
               </>
             )}
           </button>
@@ -317,7 +310,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
             className="flex items-center gap-2 px-6 py-2 bg-accent border-[3px] border-accent-border disabled:opacity-50 disabled:cursor-not-allowed text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0 transition-all"
           >
             Suivant
-            <ArrowRight className="w-4 h-4" />
+            <PixelIcon name="ArrowRight" className="w-4 h-4" />
           </button>
         )}
       </div>
