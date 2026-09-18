@@ -46,10 +46,10 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <p className="text-red-400 mb-4">Niveau non trouvé</p>
+          <p className="text-error mb-4">Niveau non trouvé</p>
           <Link
             href="/dashboard"
-            className="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            className="inline-block px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
           >
             Retour au dashboard
           </Link>
@@ -85,10 +85,10 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
   return (
     <div className="space-y-6">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-400">
+      <nav className="flex items-center gap-2 text-sm text-text-secondary">
         <Link
           href="/dashboard"
-          className="flex items-center gap-1 hover:text-white transition-colors"
+          className="flex items-center gap-1 hover:text-text-primary transition-colors"
         >
           <Home className="w-4 h-4" />
           Dashboard
@@ -96,36 +96,36 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
         <ChevronRight className="w-4 h-4" />
         <Link
           href="/dashboard"
-          className="hover:text-white transition-colors"
+          className="hover:text-text-primary transition-colors"
         >
           Niveaux
         </Link>
         <ChevronRight className="w-4 h-4" />
-        <span className="text-white font-medium">{level.name}</span>
+        <span className="text-text-primary font-medium">{level.name}</span>
       </nav>
 
       {/* Header du niveau */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 shadow-lg">
+      <div className="bg-surface border-[3px] border-border shadow-hard p-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
-              {locked && <Lock className="w-8 h-8 text-red-500" />}
+            <h1 className="text-3xl font-display font-bold text-text-primary mb-2 flex items-center gap-3">
+              {locked && <Lock className="w-8 h-8 text-error" />}
               {level.name}
             </h1>
             {level.description && (
-              <p className="text-gray-400">{level.description}</p>
+              <p className="text-text-secondary">{level.description}</p>
             )}
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-400">Division minimale requise :</span>
+            <span className="text-sm text-text-secondary">Division minimale requise :</span>
             <DivisionBadge division={level.minDivision} size="md" />
           </div>
         </div>
 
         {/* Message si verrouillé */}
         {locked && (
-          <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4 mb-4">
-            <div className="flex items-center gap-2 text-red-400">
+          <div className="bg-error-surface border-[3px] border-error p-4 mb-4">
+            <div className="flex items-center gap-2 text-error">
               <Lock className="w-5 h-5" />
               <span className="font-semibold">
                 Ce niveau est verrouillé. Vous devez atteindre la division {level.minDivision} pour y accéder.
@@ -135,20 +135,20 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
         )}
 
         {/* Statistiques du niveau */}
-        <div className="mt-4 pt-4 border-t border-gray-700">
+        <div className="mt-4 pt-4 border-t-[3px] border-border">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400 font-medium">Progression du niveau</span>
-            <span className="text-sm font-semibold text-white">
+            <span className="text-sm text-text-secondary font-medium uppercase tracking-wide">Progression du niveau</span>
+            <span className="text-sm font-semibold text-text-primary">
               {passedCount} / {level.quizzes.length} quiz réussis
             </span>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
+          <div className="w-full bg-surface-dimmed border-[3px] border-border h-3 overflow-hidden">
             <div
-              className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-500"
+              className="bg-accent h-full transition-all duration-500"
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-text-secondary mt-2">
             {Math.round(progressPercentage)}% du niveau complété
           </p>
         </div>
@@ -156,13 +156,13 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
 
       {/* Liste des quiz */}
       {level.quizzes.length === 0 ? (
-        <div className="bg-gray-800 rounded-lg p-12 border border-gray-700 text-center">
-          <p className="text-gray-400">Aucun quiz disponible pour ce niveau</p>
+        <div className="bg-surface border-[3px] border-border p-12 text-center">
+          <p className="text-text-secondary">Aucun quiz disponible pour ce niveau</p>
         </div>
       ) : (
         <>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-display font-bold text-text-primary">
               Quiz disponibles ({level.quizzes.length})
             </h2>
           </div>
@@ -174,41 +174,41 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
               return (
                 <div
                   key={quiz.id}
-                  className={`relative bg-gray-800 rounded-lg p-6 border-2 transition-all duration-200 hover:shadow-xl hover:-translate-y-1 ${
+                  className={`relative bg-surface shadow-hard border-[3px] p-6 transition-all duration-200 ${
                     locked
-                      ? 'border-gray-700 opacity-60 cursor-not-allowed'
+                      ? 'border-border opacity-60 cursor-not-allowed'
                       : status.passed
-                      ? 'border-green-500/50 hover:border-green-500'
+                      ? 'border-success'
                       : status.attempted
-                      ? 'border-red-500/50 hover:border-red-500'
-                      : 'border-gray-700 hover:border-gray-600'
+                      ? 'border-error'
+                      : 'border-border hover:border-accent-border'
                   }`}
                 >
                   {locked && (
-                    <div className="absolute inset-0 bg-gray-900/80 rounded-lg flex items-center justify-center z-10">
-                      <Lock className="w-12 h-12 text-gray-500" />
+                    <div className="absolute inset-0 bg-ink/80 flex items-center justify-center z-10">
+                      <Lock className="w-12 h-12 text-text-secondary" />
                     </div>
                   )}
 
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-bold text-white flex-1">{quiz.title}</h3>
+                    <h3 className="text-xl font-display font-bold text-text-primary flex-1">{quiz.title}</h3>
                     {status.passed && (
-                      <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 ml-2" />
+                      <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0 ml-2" />
                     )}
                     {status.attempted && !status.passed && (
-                      <XCircle className="w-6 h-6 text-red-500 flex-shrink-0 ml-2" />
+                      <XCircle className="w-6 h-6 text-error flex-shrink-0 ml-2" />
                     )}
                   </div>
 
                   {quiz.description && (
-                    <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                    <p className="text-sm text-text-secondary mb-4 line-clamp-2">
                       {quiz.description}
                     </p>
                   )}
 
                   <div className="flex items-center gap-2 mb-4 flex-wrap">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold border ${
+                      className={`px-2 py-1 border-[3px] text-xs font-semibold uppercase tracking-wide ${
                         quiz.difficulty === 'EASY'
                           ? 'bg-green-500/20 text-green-400 border-green-500/50'
                           : quiz.difficulty === 'MEDIUM'
@@ -222,11 +222,11 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
                         ? 'Moyen'
                         : 'Difficile'}
                     </span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-text-secondary">
                       {quiz.questionCount} questions
                     </span>
                     {quiz.timeLimit && (
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-text-secondary">
                         {Math.floor(quiz.timeLimit / 60)} min
                       </span>
                     )}
@@ -234,14 +234,14 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
 
                   {/* Meilleur score si tenté */}
                   {status.attempted && (
-                    <div className="mb-4 p-2 bg-gray-700/50 rounded-lg">
+                    <div className="mb-4 p-2 bg-surface-dimmed border-[3px] border-border">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-400">Meilleur score</span>
+                        <span className="text-xs text-text-secondary">Meilleur score</span>
                         <div className="flex items-center gap-1">
-                          <TrendingUp className="w-3 h-3 text-blue-400" />
+                          <TrendingUp className="w-3 h-3 text-accent" />
                           <span
                             className={`text-sm font-semibold ${
-                              status.passed ? 'text-green-400' : 'text-red-400'
+                              status.passed ? 'text-success' : 'text-error'
                             }`}
                           >
                             {status.bestScore}%
@@ -254,18 +254,18 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
                   {/* Verrouillé : pas de Link du tout (plutôt qu'un onClick qui
                       intercepte la navigation), pour rester un Server Component */}
                   {locked ? (
-                    <div className="block w-full text-center px-4 py-2 rounded-lg font-semibold bg-gray-700 text-gray-500 cursor-not-allowed">
+                    <div className="block w-full text-center px-4 py-2 border-[3px] border-border font-semibold bg-surface-dimmed text-text-secondary cursor-not-allowed">
                       Verrouillé
                     </div>
                   ) : (
                     <Link
                       href={`/dashboard/quiz/${quiz.id}`}
-                      className={`block w-full text-center px-4 py-2 rounded-lg font-semibold transition-colors ${
+                      className={`block w-full text-center px-4 py-2 border-[3px] font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all ${
                         status.passed
-                          ? 'bg-green-600 hover:bg-green-700 text-white'
+                          ? 'bg-success border-success text-on-state'
                           : status.attempted
-                          ? 'bg-orange-600 hover:bg-orange-700 text-white'
-                          : 'bg-blue-600 hover:bg-blue-700 text-white'
+                          ? 'bg-accent border-accent-border text-on-accent'
+                          : 'bg-accent border-accent-border text-on-accent'
                       }`}
                     >
                       {status.passed ? 'Refaire' : status.attempted ? 'Réessayer' : 'Commencer'}

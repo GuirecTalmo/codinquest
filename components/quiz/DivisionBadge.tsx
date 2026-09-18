@@ -58,11 +58,10 @@ export function DivisionBadge({ division, size = 'md' }: DivisionBadgeProps) {
 
   return (
     <div
-      className={`${config.bgColor} text-white rounded-full px-3 py-1.5 flex items-center gap-2 shadow-md font-semibold ${sizeClasses[size]}`}
+      className={`${config.bgColor} text-on-ink border-[3px] border-ink px-3 py-1.5 flex items-center gap-2 shadow-hard font-semibold uppercase tracking-wide ${sizeClasses[size]}`}
     >
       <Icon className={iconSizes[size]} />
       <span>{division}</span>
     </div>
   );
 }
-

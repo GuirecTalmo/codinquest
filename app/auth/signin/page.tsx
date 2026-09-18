@@ -49,21 +49,21 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-bg p-4">
       <div className="w-full max-w-md">
-        <div className="backdrop-blur-xl bg-white/10 dark:bg-gray-800/50 rounded-2xl shadow-2xl p-8 border border-white/20">
+        <div className="bg-surface border-[3px] border-border shadow-hard p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="text-3xl font-display font-bold text-text-primary mb-2">
               Bienvenue
             </h1>
-            <p className="text-gray-300">
+            <p className="text-text-secondary">
               Connectez-vous pour continuer
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-error-surface border-[3px] border-error text-error px-4 py-3 text-sm">
                 {error}
               </div>
             )}
@@ -71,7 +71,7 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-300 mb-2"
+                className="block text-sm font-medium uppercase tracking-wide text-text-secondary mb-2"
               >
                 Email
               </label>
@@ -81,7 +81,7 @@ export default function SignInPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-surface-dimmed border-[3px] border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-all"
                 placeholder="votre@email.com"
               />
             </div>
@@ -89,7 +89,7 @@ export default function SignInPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-300 mb-2"
+                className="block text-sm font-medium uppercase tracking-wide text-text-secondary mb-2"
               >
                 Mot de passe
               </label>
@@ -99,7 +99,7 @@ export default function SignInPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-surface-dimmed border-[3px] border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-all"
                 placeholder="••••••••"
               />
             </div>
@@ -107,18 +107,18 @@ export default function SignInPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-accent border-[3px] border-accent-border text-on-accent font-semibold py-3 px-4 shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0"
             >
               {isLoading ? 'Connexion...' : 'Se connecter'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-400 text-sm">
+            <p className="text-text-secondary text-sm">
               Pas encore de compte ?{' '}
               <Link
                 href="/auth/signup"
-                className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                className="text-accent hover:text-accent-border font-medium transition-colors"
               >
                 S&apos;inscrire
               </Link>
@@ -129,5 +129,3 @@ export default function SignInPage() {
     </div>
   );
 }
-
-

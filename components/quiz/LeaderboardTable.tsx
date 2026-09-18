@@ -28,28 +28,28 @@ export function LeaderboardTable({
   return (
     <div className="w-full overflow-x-auto">
       <div className="inline-block min-w-full align-middle">
-        <div className="overflow-hidden rounded-lg border border-gray-700 shadow-lg">
-          <table className="min-w-full divide-y divide-gray-700">
-            <thead className="bg-gray-900">
+        <div className="overflow-hidden border-[3px] border-border shadow-hard">
+          <table className="min-w-full divide-y-[3px] divide-border">
+            <thead className="bg-ink">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-on-ink uppercase tracking-wider">
                   Rang
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-on-ink uppercase tracking-wider">
                   Nom
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-on-ink uppercase tracking-wider">
                   Division
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-semibold text-on-ink uppercase tracking-wider">
                   Score
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-300 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-semibold text-on-ink uppercase tracking-wider">
                   Quiz complétés
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-gray-800 divide-y divide-gray-700">
+            <tbody className="bg-surface divide-y-[3px] divide-border">
               {leaderboard.map((entry, index) => {
                 const medal = getMedal(entry.rank);
                 const isEven = index % 2 === 0;
@@ -59,14 +59,14 @@ export function LeaderboardTable({
                     key={entry.id}
                     className={`transition-colors ${
                       entry.isCurrentUser
-                        ? 'bg-blue-900/30 border-l-4 border-l-blue-500'
+                        ? 'bg-accent/10 border-l-[3px] border-l-accent'
                         : isEven
-                        ? 'bg-gray-800'
-                        : 'bg-gray-800/50'
+                        ? 'bg-surface'
+                        : 'bg-surface-dimmed'
                     } ${
                       entry.isCurrentUser
-                        ? 'hover:bg-blue-900/40'
-                        : 'hover:bg-gray-700'
+                        ? 'hover:bg-accent/20'
+                        : 'hover:bg-border/10'
                     }`}
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -74,7 +74,7 @@ export function LeaderboardTable({
                         {medal ? (
                           <span className="text-2xl">{medal}</span>
                         ) : (
-                          <span className="text-sm font-medium text-gray-300">
+                          <span className="text-sm font-medium text-text-secondary">
                             #{entry.rank}
                           </span>
                         )}
@@ -82,11 +82,11 @@ export function LeaderboardTable({
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium text-white">
+                        <span className="text-sm font-medium text-text-primary">
                           {entry.name}
                         </span>
                         {entry.isCurrentUser && (
-                          <span className="text-xs text-blue-400 font-semibold mt-1">
+                          <span className="text-xs text-accent font-semibold mt-1 uppercase tracking-wide">
                             (Vous)
                           </span>
                         )}
@@ -99,12 +99,12 @@ export function LeaderboardTable({
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm font-bold text-white">
+                      <span className="text-sm font-bold text-text-primary">
                         {entry.totalScore.toLocaleString()}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-gray-300">
+                      <span className="text-sm text-text-secondary">
                         {entry.quizzesCompleted}
                       </span>
                     </td>
@@ -117,11 +117,10 @@ export function LeaderboardTable({
       </div>
 
       {leaderboard.length === 0 && (
-        <div className="text-center py-12 bg-gray-800 rounded-lg border border-gray-700">
-          <p className="text-gray-400">Aucun joueur dans le classement</p>
+        <div className="text-center py-12 bg-surface border-[3px] border-border">
+          <p className="text-text-secondary">Aucun joueur dans le classement</p>
         </div>
       )}
     </div>
   );
 }
-

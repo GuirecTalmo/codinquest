@@ -14,25 +14,23 @@ export function ProgressBar({ current, total, division }: ProgressBarProps) {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-medium text-gray-300">
+        <span className="text-sm font-medium text-text-secondary uppercase tracking-wide">
           Progression vers la prochaine division
         </span>
-        <span className="text-sm font-semibold text-white">
+        <span className="text-sm font-semibold text-text-primary">
           {current}/{total} quiz réussis
         </span>
       </div>
-      <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden shadow-inner">
+      <div className="w-full bg-surface-dimmed border-[3px] border-border h-3 overflow-hidden">
         <div
-          className="h-full rounded-full transition-all duration-500 ease-out"
+          className="h-full transition-all duration-500 ease-out"
           style={{
             width: `${percentage}%`,
             backgroundColor: color,
           }}
-        >
-          <div className="h-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
-        </div>
+        />
       </div>
-      <p className="text-xs text-gray-400 mt-1">
+      <p className="text-xs text-text-secondary mt-1">
         {current < total
           ? `${total - current} réussite${total - current > 1 ? 's' : ''} restante${total - current > 1 ? 's' : ''} pour la promotion`
           : 'Promotion disponible !'}
@@ -40,4 +38,3 @@ export function ProgressBar({ current, total, division }: ProgressBarProps) {
     </div>
   );
 }
-

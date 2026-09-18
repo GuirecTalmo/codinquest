@@ -6,7 +6,6 @@ import { QuizQuestion } from '@/components/quiz/QuizQuestion';
 import { QuizTimer } from '@/components/quiz/QuizTimer';
 import type { QuizForUser } from '@/lib/data/quiz';
 import {
-  Loader2,
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
@@ -120,10 +119,10 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <p className="text-red-400 mb-4">{error}</p>
+          <p className="text-error mb-4">{error}</p>
           <button
             onClick={() => router.push('/dashboard')}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            className="px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
           >
             Retour au dashboard
           </button>
@@ -135,59 +134,63 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
   if (result) {
     return (
       <div className="max-w-2xl mx-auto">
-        <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 shadow-xl">
+        <div className="bg-surface border-[3px] border-border shadow-hard p-8">
           <div className="text-center mb-8">
             {result.isPassed ? (
               <>
-                <CheckCircle2 className="w-20 h-20 text-green-500 mx-auto mb-4" />
-                <h2 className="text-3xl font-bold text-white mb-2">
-                  Quiz réussi ! 🎉
+                <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center border-[3px] border-success bg-success-surface">
+                  <CheckCircle2 className="w-10 h-10 text-success" />
+                </div>
+                <h2 className="text-3xl font-display font-bold text-text-primary mb-2">
+                  Quiz réussi !
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-text-secondary">
                   Félicitations, vous avez réussi ce quiz !
                 </p>
               </>
             ) : (
               <>
-                <XCircle className="w-20 h-20 text-red-500 mx-auto mb-4" />
-                <h2 className="text-3xl font-bold text-white mb-2">
+                <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center border-[3px] border-error bg-error-surface">
+                  <XCircle className="w-10 h-10 text-error" />
+                </div>
+                <h2 className="text-3xl font-display font-bold text-text-primary mb-2">
                   Quiz échoué
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-text-secondary">
                   Dommage, vous n&apos;avez pas atteint le score minimum requis.
                 </p>
               </>
             )}
           </div>
 
-          <div className="bg-gray-700 rounded-lg p-6 mb-6">
+          <div className="bg-surface-dimmed border-[3px] border-border p-6 mb-6">
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">
+                <div className="text-3xl font-display font-bold text-text-primary mb-1">
                   {result.score}%
                 </div>
-                <div className="text-sm text-gray-400">Score</div>
+                <div className="text-sm text-text-secondary uppercase tracking-wide">Score</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-1">
+                <div className="text-3xl font-display font-bold text-text-primary mb-1">
                   {result.pointsEarned}/{result.totalPoints}
                 </div>
-                <div className="text-sm text-gray-400">Points</div>
+                <div className="text-sm text-text-secondary uppercase tracking-wide">Points</div>
               </div>
             </div>
 
             {result.division && (
-              <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-4 mb-4">
+              <div className="bg-accent border-[3px] border-accent-border p-4 mb-4">
                 <div className="flex items-center justify-center gap-2">
-                  <Trophy className="w-5 h-5 text-blue-400" />
-                  <span className="text-blue-400 font-semibold">
+                  <Trophy className="w-5 h-5 text-on-accent" />
+                  <span className="text-on-accent font-semibold">
                     Promotion ! Vous êtes maintenant {result.division}
                   </span>
                 </div>
               </div>
             )}
 
-            <div className="text-sm text-gray-400 text-center">
+            <div className="text-sm text-text-secondary text-center">
               Score minimum requis : {quiz.passingScore}%
             </div>
           </div>
@@ -195,7 +198,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => router.push('/dashboard')}
-              className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 px-4 py-3 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
             >
               Retour au dashboard
             </button>
@@ -206,7 +209,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
                 setUserAnswers({});
                 setTimeStarted(new Date());
               }}
-              className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-3 bg-surface border-[3px] border-border text-text-primary font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all flex items-center justify-center gap-2"
             >
               <RotateCcw className="w-4 h-4" />
               Recommencer
@@ -220,12 +223,12 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header du quiz */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-6">
+      <div className="bg-surface border-[3px] border-border shadow-hard p-6 mb-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <div>
-            <h1 className="text-2xl font-bold text-white mb-1">{quiz.title}</h1>
+            <h1 className="text-2xl font-display font-bold text-text-primary mb-1">{quiz.title}</h1>
             {quiz.description && (
-              <p className="text-gray-400 text-sm">{quiz.description}</p>
+              <p className="text-text-secondary text-sm">{quiz.description}</p>
             )}
           </div>
           {quiz.timeLimit && (
@@ -236,16 +239,16 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
         {/* Barre de progression */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-400">
+            <span className="text-text-secondary">
               Question {currentQuestionIndex + 1} sur {quiz.questions.length}
             </span>
-            <span className="text-gray-400">
+            <span className="text-text-secondary">
               {Math.round(progress)}%
             </span>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+          <div className="w-full bg-surface-dimmed border-[3px] border-border h-2 overflow-hidden">
             <div
-              className="bg-blue-500 h-full rounded-full transition-all duration-300"
+              className="bg-accent h-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -253,7 +256,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
       </div>
 
       {/* Question actuelle */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-6">
+      <div className="bg-surface border-[3px] border-border shadow-hard p-6 mb-6">
         <QuizQuestion
           question={currentQuestion}
           answers={currentQuestion.answers}
@@ -267,7 +270,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
         <button
           onClick={handlePrevious}
           disabled={currentQuestionIndex === 0}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-surface border-[3px] border-border disabled:opacity-50 disabled:cursor-not-allowed text-text-primary font-medium shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0 transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
           Précédent
@@ -278,12 +281,12 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
             <button
               key={index}
               onClick={() => setCurrentQuestionIndex(index)}
-              className={`w-8 h-8 rounded-full text-sm font-medium transition-colors ${
+              className={`w-8 h-8 border-[3px] text-sm font-medium transition-colors ${
                 index === currentQuestionIndex
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-accent border-accent-border text-on-accent'
                   : userAnswers[quiz.questions[index].id]
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  ? 'bg-success border-success text-on-state'
+                  : 'bg-surface border-border text-text-secondary hover:border-accent-border'
               }`}
               title={`Question ${index + 1}`}
             >
@@ -296,13 +299,10 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
           <button
             onClick={() => handleSubmit()}
             disabled={!allQuestionsAnswered || isSubmitting}
-            className="flex items-center gap-2 px-6 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-colors"
+            className="flex items-center gap-2 px-6 py-2 bg-success border-[3px] border-success disabled:opacity-50 disabled:cursor-not-allowed text-on-state font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0 transition-all"
           >
             {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Envoi...
-              </>
+              'Envoi...'
             ) : (
               <>
                 Terminer le quiz
@@ -314,7 +314,7 @@ export function QuizRunner({ quiz }: { quiz: QuizForUser }) {
           <button
             onClick={handleNext}
             disabled={!currentAnswer}
-            className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-colors"
+            className="flex items-center gap-2 px-6 py-2 bg-accent border-[3px] border-accent-border disabled:opacity-50 disabled:cursor-not-allowed text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0 transition-all"
           >
             Suivant
             <ArrowRight className="w-4 h-4" />

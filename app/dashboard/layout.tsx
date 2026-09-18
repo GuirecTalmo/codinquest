@@ -54,17 +54,18 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-gray-900 border-b border-gray-800 shadow-lg">
+    <div className="min-h-screen bg-bg">
+      {/* Navbar -- fond ink fixe, comme l'app-bar de la source (la seule
+          surface qui ne "theme-swap" jamais). */}
+      <nav className="sticky top-0 z-50 bg-ink">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo / Titre */}
             <Link href="/dashboard" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Trophy className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 bg-accent border-[3px] border-accent-border flex items-center justify-center">
+                <Trophy className="w-6 h-6 text-on-accent" />
               </div>
-              <span className="text-xl font-bold text-white hidden sm:block">
+              <span className="text-xl font-display font-bold text-on-ink hidden sm:block">
                 CodeInQuest
               </span>
             </Link>
@@ -78,10 +79,10 @@ export default function DashboardLayout({
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-2 px-4 py-2 text-sm font-medium uppercase tracking-wide transition-colors ${
                       active
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                        ? 'bg-accent text-on-accent'
+                        : 'text-on-ink/70 hover:bg-white/10 hover:text-on-ink'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -95,9 +96,9 @@ export default function DashboardLayout({
             <div className="flex items-center gap-4">
               {session?.user && (
                 <div className="hidden sm:flex items-center gap-3">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-800 rounded-lg border border-gray-700">
-                    <User className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm font-medium text-white">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-surface border-[3px] border-border">
+                    <User className="w-4 h-4 text-text-secondary" />
+                    <span className="text-sm font-medium text-text-primary">
                       {session.user.name || session.user.email}
                     </span>
                   </div>
@@ -108,7 +109,7 @@ export default function DashboardLayout({
               )}
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-error border-[3px] border-error text-on-state text-sm font-medium uppercase tracking-wide shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
               >
                 <LogOut className="w-4 h-4" />
                 <span className="hidden sm:inline">Déconnexion</span>
@@ -118,7 +119,7 @@ export default function DashboardLayout({
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden border-t border-gray-800 px-4 py-2">
+        <div className="md:hidden border-t-[3px] border-border/40 px-4 py-2">
           <div className="flex items-center justify-around gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -127,10 +128,10 @@ export default function DashboardLayout({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                  className={`flex flex-col items-center gap-1 px-3 py-2 text-xs font-medium uppercase tracking-wide transition-colors ${
                     active
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                      ? 'bg-accent text-on-accent'
+                      : 'text-on-ink/60 hover:bg-white/10 hover:text-on-ink'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -149,4 +150,3 @@ export default function DashboardLayout({
     </div>
   );
 }
-

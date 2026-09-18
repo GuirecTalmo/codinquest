@@ -41,12 +41,12 @@ export function QuizTimer({ timeLimit, onTimeUp, onTick }: QuizTimerProps) {
   // Déterminer la couleur selon le temps restant
   const getColorClass = (): string => {
     if (timeLeft <= 10) {
-      return 'text-red-500 bg-red-500/20 border-red-500/50';
+      return 'text-error bg-error-surface border-error';
     }
     if (timeLeft <= 30) {
-      return 'text-orange-500 bg-orange-500/20 border-orange-500/50';
+      return 'text-accent bg-surface-dimmed border-accent-border';
     }
-    return 'text-blue-400 bg-blue-500/20 border-blue-500/50';
+    return 'text-text-primary bg-surface border-border';
   };
 
   const percentage = (timeLeft / timeLimit) * 100;
@@ -54,7 +54,7 @@ export function QuizTimer({ timeLimit, onTimeUp, onTick }: QuizTimerProps) {
   return (
     <div className="w-full max-w-md mx-auto">
       <div
-        className={`rounded-lg border-2 p-4 transition-all duration-300 ${getColorClass()}`}
+        className={`border-[3px] p-4 shadow-hard transition-all duration-300 ${getColorClass()}`}
       >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
@@ -63,34 +63,33 @@ export function QuizTimer({ timeLimit, onTimeUp, onTick }: QuizTimerProps) {
             ) : (
               <Clock className="w-5 h-5" />
             )}
-            <span className="text-sm font-semibold">Temps restant</span>
+            <span className="text-sm font-semibold uppercase tracking-wide">Temps restant</span>
           </div>
-          <span className="text-2xl font-bold tabular-nums">
+          <span className="text-2xl font-display font-bold tabular-nums">
             {formatTime(timeLeft)}
           </span>
         </div>
 
         {/* Barre de progression */}
-        <div className="w-full bg-gray-700/50 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-surface-dimmed border-[3px] border-border h-2 overflow-hidden">
           <div
             className={`h-full transition-all duration-1000 ease-linear ${
               timeLeft <= 10
-                ? 'bg-red-500'
+                ? 'bg-error'
                 : timeLeft <= 30
-                ? 'bg-orange-500'
-                : 'bg-blue-500'
+                ? 'bg-accent'
+                : 'bg-text-secondary'
             }`}
             style={{ width: `${percentage}%` }}
           />
         </div>
 
         {timeLeft <= 10 && (
-          <p className="text-xs text-red-400 mt-2 font-semibold animate-pulse">
-            ⚠️ Temps critique !
+          <p className="text-xs text-error mt-2 font-semibold uppercase tracking-wide animate-pulse">
+            Temps critique !
           </p>
         )}
       </div>
     </div>
   );
 }
-

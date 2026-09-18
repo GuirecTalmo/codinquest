@@ -19,28 +19,27 @@ export default function Home() {
 
   if (status === 'loading') {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-400">Chargement...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen bg-bg">
+        <p className="text-text-secondary font-display uppercase tracking-wide">
+          Chargement...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <div className="min-h-screen bg-bg">
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-            <Trophy className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 bg-accent border-[3px] border-accent-border flex items-center justify-center">
+            <Trophy className="w-6 h-6 text-on-accent" />
           </div>
-          <span className="text-2xl font-bold text-white">CodeInQuest</span>
+          <span className="text-2xl font-display font-bold text-text-primary">CodeInQuest</span>
         </div>
         <Link
           href="/auth/signin"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
         >
           <LogIn className="w-4 h-4" />
           Se connecter
@@ -51,14 +50,12 @@ export default function Home() {
       <main className="container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8">
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl font-display font-bold text-text-primary mb-6 leading-tight">
               Testez vos connaissances,
               <br />
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                progressez en quiz !
-              </span>
+              <span className="text-accent">progressez en quiz !</span>
             </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-text-secondary mb-8 max-w-2xl mx-auto">
               Relevez des défis, montez en divisions et devenez un maître du quiz.
               De Bronze à Challenger, chaque réussite compte !
             </p>
@@ -68,14 +65,14 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Link
               href="/auth/signup"
-              className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold text-lg transition-all duration-200 transform hover:scale-105 shadow-xl"
+              className="flex items-center justify-center gap-2 px-8 py-4 bg-accent border-[3px] border-accent-border text-on-accent font-semibold text-lg shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
             >
               Commencer
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               href="/auth/signin"
-              className="flex items-center justify-center gap-2 px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-semibold text-lg transition-colors border-2 border-gray-700"
+              className="flex items-center justify-center gap-2 px-8 py-4 bg-surface border-[3px] border-border text-text-primary font-semibold text-lg shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
             >
               J&apos;ai déjà un compte
             </Link>
@@ -83,34 +80,34 @@ export default function Home() {
 
           {/* Features */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700 hover:border-blue-500 transition-colors">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                <Trophy className="w-6 h-6 text-blue-400" />
+            <div className="bg-surface border-[3px] border-border shadow-hard p-6">
+              <div className="w-12 h-12 bg-surface-dimmed border-[3px] border-border flex items-center justify-center mb-4 mx-auto">
+                <Trophy className="w-6 h-6 text-accent" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Système de Divisions</h3>
-              <p className="text-gray-400">
-                Montez de Bronze à Challenger en réussissant les quiz. 
+              <h3 className="text-xl font-display font-bold text-text-primary mb-2">Système de Divisions</h3>
+              <p className="text-text-secondary">
+                Montez de Bronze à Challenger en réussissant les quiz.
                 Chaque division ouvre de nouveaux défis !
               </p>
             </div>
 
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700 hover:border-purple-500 transition-colors">
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                <Target className="w-6 h-6 text-purple-400" />
+            <div className="bg-surface border-[3px] border-border shadow-hard p-6">
+              <div className="w-12 h-12 bg-surface-dimmed border-[3px] border-border flex items-center justify-center mb-4 mx-auto">
+                <Target className="w-6 h-6 text-accent" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Quiz Variés</h3>
-              <p className="text-gray-400">
+              <h3 className="text-xl font-display font-bold text-text-primary mb-2">Quiz Variés</h3>
+              <p className="text-text-secondary">
                 Des quiz de difficulté progressive sur différents thèmes.
                 Culture générale, sciences, histoire et plus encore !
               </p>
             </div>
 
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700 hover:border-green-500 transition-colors">
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                <TrendingUp className="w-6 h-6 text-green-400" />
+            <div className="bg-surface border-[3px] border-border shadow-hard p-6">
+              <div className="w-12 h-12 bg-surface-dimmed border-[3px] border-border flex items-center justify-center mb-4 mx-auto">
+                <TrendingUp className="w-6 h-6 text-accent" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Suivi de Progression</h3>
-              <p className="text-gray-400">
+              <h3 className="text-xl font-display font-bold text-text-primary mb-2">Suivi de Progression</h3>
+              <p className="text-text-secondary">
                 Consultez votre historique, vos statistiques et votre classement.
                 Visualisez vos progrès en temps réel !
               </p>
@@ -118,23 +115,23 @@ export default function Home() {
           </div>
 
           {/* Stats */}
-          <div className="mt-20 pt-12 border-t border-gray-700">
+          <div className="mt-20 pt-12 border-t-[3px] border-border">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div>
-                <div className="text-3xl font-bold text-white mb-2">7</div>
-                <div className="text-gray-400 text-sm">Divisions</div>
+                <div className="text-3xl font-display font-bold text-text-primary mb-2">7</div>
+                <div className="text-text-secondary text-sm uppercase tracking-wide">Divisions</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-white mb-2">3</div>
-                <div className="text-gray-400 text-sm">Niveaux</div>
+                <div className="text-3xl font-display font-bold text-text-primary mb-2">3</div>
+                <div className="text-text-secondary text-sm uppercase tracking-wide">Niveaux</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-white mb-2">6+</div>
-                <div className="text-gray-400 text-sm">Quiz</div>
+                <div className="text-3xl font-display font-bold text-text-primary mb-2">6+</div>
+                <div className="text-text-secondary text-sm uppercase tracking-wide">Quiz</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-white mb-2">30+</div>
-                <div className="text-gray-400 text-sm">Questions</div>
+                <div className="text-3xl font-display font-bold text-text-primary mb-2">30+</div>
+                <div className="text-text-secondary text-sm uppercase tracking-wide">Questions</div>
               </div>
             </div>
           </div>

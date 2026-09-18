@@ -45,13 +45,13 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       {/* Section Profil */}
-      <section className="bg-gray-800 rounded-lg p-6 border border-gray-700 shadow-lg">
+      <section className="bg-surface border-[3px] border-border shadow-hard p-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-display font-bold text-text-primary mb-2">
               Bienvenue, {profile.user.name || profile.user.email} !
             </h1>
-            <p className="text-gray-400">
+            <p className="text-text-secondary">
               Continuez à progresser et atteignez de nouvelles divisions
             </p>
           </div>
@@ -66,53 +66,53 @@ export default async function DashboardPage() {
 
       {/* Section Statistiques */}
       <section>
-        <h2 className="text-xl font-bold text-white mb-4">Statistiques</h2>
+        <h2 className="text-xl font-display font-bold text-text-primary mb-4">Statistiques</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard
             label="Score Total"
             value={profile.stats.totalScore.toLocaleString()}
             icon={Trophy}
-            color="text-yellow-400"
+            color="text-accent"
           />
           <StatCard
             label="Quiz Complétés"
             value={profile.stats.quizzesCompleted}
             icon={CheckCircle2}
-            color="text-green-400"
+            color="text-success"
           />
           <StatCard
             label="Taux de Réussite"
             value={`${profile.stats.successRate}%`}
             icon={Target}
-            color="text-blue-400"
+            color="text-accent"
           />
         </div>
       </section>
 
       {/* Section Niveaux */}
       <section>
-        <h2 className="text-xl font-bold text-white mb-4">Niveaux</h2>
+        <h2 className="text-xl font-display font-bold text-text-primary mb-4">Niveaux</h2>
         <div className="space-y-8">
           {levels.map((level) => {
             const locked = !isDivisionAtLeast(profile.stats.division, level.minDivision);
 
             return (
-              <div key={level.id} className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+              <div key={level.id} className="bg-surface border-[3px] border-border shadow-hard p-6">
                 <div className="mb-4">
                   <div className="flex items-center gap-3 mb-2 flex-wrap">
-                    <h3 className="text-xl font-bold text-white">{level.name}</h3>
-                    <span className="text-xs text-gray-400 bg-gray-700 px-2 py-1 rounded">
+                    <h3 className="text-xl font-display font-bold text-text-primary">{level.name}</h3>
+                    <span className="text-xs text-text-secondary bg-surface-dimmed border-[3px] border-border px-2 py-1 uppercase tracking-wide">
                       Niveau {level.order}
                     </span>
                     {locked && (
-                      <span className="flex items-center gap-1 text-xs text-red-400 bg-red-500/20 border border-red-500/50 px-2 py-1 rounded-full">
+                      <span className="flex items-center gap-1 text-xs text-error bg-error-surface border-[3px] border-error px-2 py-1 uppercase tracking-wide">
                         <Lock className="w-3 h-3" />
                         Division {level.minDivision} requise
                       </span>
                     )}
                   </div>
                   {level.description && (
-                    <p className="text-gray-400 text-sm">{level.description}</p>
+                    <p className="text-text-secondary text-sm">{level.description}</p>
                   )}
                 </div>
 
@@ -141,7 +141,7 @@ export default async function DashboardPage() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-gray-400 text-center py-8">
+                  <p className="text-text-secondary text-center py-8">
                     Aucun quiz disponible pour ce niveau
                   </p>
                 )}
