@@ -1,8 +1,6 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PixelIcon } from '@/components/PixelIcon';
@@ -13,14 +11,7 @@ const LADDER_ORDER = [...DIVISIONS_ORDER].reverse();
 
 export default function Home() {
   const { status } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    // Rediriger vers le dashboard si l'utilisateur est déjà connecté
-    if (status === 'authenticated') {
-      router.push('/dashboard');
-    }
-  }, [status, router]);
+  const isAuthenticated = status === 'authenticated';
 
   if (status === 'loading') {
     return (
@@ -36,7 +27,7 @@ export default function Home() {
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <Image
             src="/icons/chest-closed-48.png"
             alt=""
@@ -47,14 +38,24 @@ export default function Home() {
             className="w-10 h-10 [image-rendering:pixelated]"
           />
           <span className="text-2xl font-display font-bold text-text-primary">CodeInQuest</span>
-        </div>
-        <Link
-          href="/auth/signin"
-          className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
-        >
-          <PixelIcon name="LogIn" className="w-4 h-4" />
-          Se connecter
         </Link>
+        {isAuthenticated ? (
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+          >
+            <PixelIcon name="User" className="w-4 h-4" />
+            Mon compte
+          </Link>
+        ) : (
+          <Link
+            href="/auth/signin"
+            className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+          >
+            <PixelIcon name="LogIn" className="w-4 h-4" />
+            Se connecter
+          </Link>
+        )}
       </nav>
 
       {/* Hero Section -- deux colonnes : accroche + CTA à gauche, échelle
