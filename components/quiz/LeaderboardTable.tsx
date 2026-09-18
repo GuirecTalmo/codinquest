@@ -1,6 +1,7 @@
 import { Division } from '@prisma/client';
 import { DivisionBadge } from './DivisionBadge';
 import { RankMedal } from './RankMedal';
+import { PixelIcon } from '@/components/PixelIcon';
 
 interface LeaderboardEntry {
   rank: number;
@@ -116,7 +117,8 @@ export function LeaderboardTable({
       </div>
 
       {leaderboard.length === 0 && (
-        <div className="text-center py-12 bg-surface border-[3px] border-border">
+        <div className="text-center py-12 bg-surface border-[3px] border-border shadow-hard">
+          <PixelIcon name="User" className="w-16 h-16 text-text-secondary mx-auto mb-4" />
           <p className="text-text-secondary">Aucun joueur dans le classement</p>
         </div>
       )}
