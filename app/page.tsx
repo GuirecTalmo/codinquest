@@ -193,6 +193,17 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      <footer className="container mx-auto px-4 py-8 border-t-[3px] border-border">
+        <div className="max-w-6xl mx-auto flex justify-center">
+          <Link
+            href="/confidentialite"
+            className="text-text-secondary hover:text-accent text-sm transition-colors"
+          >
+            Politique de confidentialité
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -234,7 +234,7 @@ export default function SignUpPage() {
             </button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center space-y-2">
             <p className="text-text-secondary text-sm">
               Déjà un compte ?{' '}
               <Link
@@ -243,6 +243,16 @@ export default function SignUpPage() {
               >
                 Se connecter
               </Link>
+            </p>
+            <p className="text-text-secondary text-xs">
+              En créant un compte, vous acceptez notre{' '}
+              <Link
+                href="/confidentialite"
+                className="text-accent hover:text-accent-border transition-colors"
+              >
+                politique de confidentialité
+              </Link>
+              .
             </p>
           </div>
         </div>
