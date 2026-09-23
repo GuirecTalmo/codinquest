@@ -245,7 +245,14 @@ export default function SignUpPage() {
               </Link>
             </p>
             <p className="text-text-secondary text-xs">
-              En créant un compte, vous acceptez notre{' '}
+              En créant un compte, vous acceptez nos{' '}
+              <Link
+                href="/cgu"
+                className="text-accent hover:text-accent-border transition-colors"
+              >
+                CGU
+              </Link>{' '}
+              et notre{' '}
               <Link
                 href="/confidentialite"
                 className="text-accent hover:text-accent-border transition-colors"
