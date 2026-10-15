@@ -17,24 +17,36 @@ interface QuizCardProps {
   locked?: boolean;
 }
 
+// Score minimum par défaut du système (`passingScore` Prisma, voir
+// PRODUCT.md). Répéter cette valeur sur chaque carte n'ajoutait aucune
+// information pour le cas courant -- on ne l'affiche que lorsqu'un quiz
+// s'en écarte.
+const DEFAULT_PASSING_SCORE = 70;
+
+// Neutre à dessein : la difficulté est informative, pas une alerte. Un
+// badge coloré (vert/jaune/rouge) entrait en collision avec l'accent gold
+// ("Moyen") et avec les couleurs sémantiques success/error ("Difficile"), ce
+// qui cassait la Règle du Seul Accent et la Règle de Statut du DESIGN.md. La
+// progression de poids visuel (contour -> surface tamisée -> surface ink)
+// différencie les trois niveaux sans emprunter de teinte.
 const difficultyConfig: Record<
   Difficulty,
   { color: string; label: string; bgColor: string }
 > = {
   EASY: {
-    color: 'text-green-400',
+    color: 'text-text-secondary',
     label: 'Facile',
-    bgColor: 'bg-green-500/20 border-green-500/50',
+    bgColor: 'bg-transparent border-border',
   },
   MEDIUM: {
-    color: 'text-yellow-400',
+    color: 'text-text-primary',
     label: 'Moyen',
-    bgColor: 'bg-yellow-500/20 border-yellow-500/50',
+    bgColor: 'bg-surface-dimmed border-border',
   },
   HARD: {
-    color: 'text-red-400',
+    color: 'text-on-ink',
     label: 'Difficile',
-    bgColor: 'bg-red-500/20 border-red-500/50',
+    bgColor: 'bg-ink border-border',
   },
 };
 
@@ -46,7 +58,7 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
         className={`bg-surface border-[3px] border-border shadow-hard p-6 transition-all duration-200 ${
           locked
             ? 'opacity-60'
-            : 'hover:border-accent-border'
+            : 'hover:border-accent-border hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]'
         }`}
       >
         {locked && (
@@ -111,7 +123,7 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
           </div>
         </div>
 
-        {quiz.passingScore && (
+        {quiz.passingScore != null && quiz.passingScore !== DEFAULT_PASSING_SCORE && (
           <div className="mt-3 text-xs text-text-secondary">
             Score minimum requis : {quiz.passingScore}%
           </div>

@@ -91,7 +91,12 @@ export default async function DashboardPage() {
 
       {/* Section Niveaux */}
       <section>
-        <h2 className="text-xl font-display font-bold text-text-primary mb-4">Niveaux</h2>
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+          <h2 className="text-xl font-display font-bold text-text-primary">Niveaux</h2>
+          <p className="text-xs text-text-secondary">
+            Score minimum requis par défaut : 70 % (indiqué sur la carte uniquement si différent)
+          </p>
+        </div>
         <div className="space-y-8">
           {levels.map((level) => {
             const locked = !isDivisionAtLeast(profile.stats.division, level.minDivision);
@@ -105,7 +110,10 @@ export default async function DashboardPage() {
                       Niveau {level.order}
                     </span>
                     {locked && (
-                      <span className="flex items-center gap-1 text-xs text-error bg-error-surface border-[3px] border-error px-2 py-1 uppercase tracking-wide">
+                      /* Neutre, pas alert-red : être bloqué par sa division est une
+                         étape de progression, pas une erreur -- le rouge est
+                         réservé aux échecs (voir DESIGN.md, Règle de Statut). */
+                      <span className="flex items-center gap-1 text-xs text-text-secondary bg-surface-dimmed border-[3px] border-border-dimmed px-2 py-1 uppercase tracking-wide">
                         <PixelIcon name="Lock" className="w-3 h-3" />
                         Division {level.minDivision} requise
                       </span>

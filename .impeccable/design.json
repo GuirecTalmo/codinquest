@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T00:00:00.000Z",
+  "title": "Design System: CodeInQuest",
+  "extensions": {
+    "colorMeta": {
+      "treasure-gold": { "role": "primary", "displayName": "Treasure Gold", "canonical": "#ffc53d", "tonalRamp": ["#4c3600", "#8a6100", "#c78b00", "#ffb405", "#ffc742", "#ffd980", "#ffebbd", "#fff7e5"] },
+      "treasure-gold-border": { "role": "primary", "displayName": "Treasure Gold Border", "canonical": "#8c6600", "tonalRamp": ["#4c3800", "#8a6400", "#c79100", "#ffbb05", "#ffcc42", "#ffdc80", "#ffedbd", "#fff8e5"] },
+      "treasure-shadow": { "role": "primary", "displayName": "Treasure Shadow", "canonical": "#231a00", "tonalRamp": ["#4c3900", "#8a6600", "#c79400", "#ffbf05", "#ffce42", "#ffde80", "#ffeebd", "#fff8e5"] },
+      "midnight-navy": { "role": "neutral", "displayName": "Midnight Navy", "canonical": "#0f1320", "tonalRamp": ["#181f34", "#2c385e", "#3f5087", "#556aaf", "#7f8fc3", "#a8b3d6", "#d2d8ea", "#eef0f7"] },
+      "arcade-panel": { "role": "neutral", "displayName": "Arcade Panel", "canonical": "#1b2133", "tonalRamp": ["#1a2032", "#303a5a", "#455482", "#5c6fa8", "#8492be", "#acb5d3", "#d4d9e8", "#eef0f6"] },
+      "panel-shadow": { "role": "neutral", "displayName": "Panel Shadow", "canonical": "#161b2b", "tonalRamp": ["#1a2033", "#2f395b", "#435384", "#5a6daa", "#8291bf", "#abb4d4", "#d3d8e9", "#eef0f6"] },
+      "cabinet-black": { "role": "neutral", "displayName": "Cabinet Black", "canonical": "#20222c", "tonalRamp": ["#20222c", "#3a3e50", "#545973", "#6e7596", "#9297b0", "#b5b9c9", "#d9dae3", "#f0f1f4"] },
+      "pure-white": { "role": "neutral", "displayName": "Pure White", "canonical": "#ffffff" },
+      "steel-blue-border": { "role": "neutral", "displayName": "Steel Blue Border", "canonical": "#5a6c9a", "tonalRamp": ["#1c2230", "#333d57", "#49587e", "#6174a3", "#8896b9", "#afb8d0", "#d5dae7", "#eff1f6"] },
+      "muted-steel-border": { "role": "neutral", "displayName": "Muted Steel Border", "canonical": "#5f6b8c", "tonalRamp": ["#1f232e", "#383f52", "#505b76", "#6a779a", "#8f98b3", "#b3bacb", "#d8dbe4", "#f0f1f5"] },
+      "hard-shadow-slate": { "role": "neutral", "displayName": "Hard Shadow Slate", "canonical": "#55617d", "tonalRamp": ["#1f232e", "#384052", "#515c76", "#6a799a", "#8f99b3", "#b3bacb", "#d8dbe4", "#f0f1f5"] },
+      "bright-parchment": { "role": "neutral", "displayName": "Bright Parchment", "canonical": "#e9edf8", "tonalRamp": ["#121d3a", "#213468", "#304b97", "#4164c3", "#708ad1", "#9eb0e0", "#cdd6ef", "#eceff9"] },
+      "faded-steel": { "role": "neutral", "displayName": "Faded Steel", "canonical": "#8a93ad", "tonalRamp": ["#20232d", "#393f51", "#525b75", "#6c7798", "#9099b1", "#b4bacb", "#d8dbe4", "#f0f1f4"] },
+      "badge-navy": { "role": "neutral", "displayName": "Badge Navy", "canonical": "#232b42", "tonalRamp": ["#1b2132", "#303b5a", "#455582", "#5c6fa8", "#8493be", "#acb6d3", "#d4d9e8", "#eef0f6"] },
+      "victory-green": { "role": "success", "displayName": "Victory Green", "canonical": "#42c97a", "tonalRamp": ["#113b23", "#1f6b3e", "#2c9b5a", "#3dc776", "#6cd598", "#9ce3b9", "#cbf0db", "#ebf9f1"] },
+      "victory-green-surface": { "role": "success", "displayName": "Victory Green Surface", "canonical": "#0f3624", "tonalRamp": ["#113c28", "#1e6c48", "#2b9c68", "#3bc987", "#6bd6a5", "#9be3c2", "#cbf1df", "#ebf9f3"] },
+      "alert-red": { "role": "error", "displayName": "Alert Red", "canonical": "#f2645a", "tonalRamp": ["#470a06", "#80120a", "#b81a0f", "#ed2517", "#f15b50", "#f69089", "#fac5c2", "#fde9e7"] },
+      "alert-red-surface": { "role": "error", "displayName": "Alert Red Surface", "canonical": "#3a1a1b", "tonalRamp": ["#351819", "#5f2b2c", "#893e40", "#b25255", "#c57d7f", "#d8a7a8", "#ead1d2", "#f7edee"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline only (landing page)." },
+      "headline": { "displayName": "Headline", "purpose": "Section/card titles, stat values -- always font-display." },
+      "body": { "displayName": "Body", "purpose": "Default paragraph/table copy, the unclassed body-tag font." },
+      "label": { "displayName": "Label", "purpose": "Uppercase, letter-spaced micro-text for badges, tags, nav items, form labels." }
+    },
+    "shadows": [
+      { "name": "hard", "value": "3px 3px 0 0 #55617d", "purpose": "The system's only elevation idiom -- flat, unblurred offset block on every contained surface." }
+    ],
+    "motion": [
+      { "name": "press", "value": "box-shadow 150ms, transform 150ms", "purpose": "Hover/active press: shadow disappears and the element translates 3px,3px into the space it occupied." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The system's one call-to-action style -- gold fill, hard border, press-on-hover.",
+      "html": "<button class=\"ds-btn-primary\"><svg class=\"ds-icon\" viewBox=\"0 0 8 8\" fill=\"currentColor\" shape-rendering=\"crispEdges\"><rect x=\"4\" y=\"0\" width=\"1\" height=\"1\"/><rect x=\"4\" y=\"1\" width=\"2\" height=\"1\"/><rect x=\"0\" y=\"2\" width=\"6\" height=\"1\"/><rect x=\"7\" y=\"2\" width=\"1\" height=\"1\"/><rect x=\"0\" y=\"3\" width=\"6\" height=\"1\"/><rect x=\"7\" y=\"3\" width=\"1\" height=\"1\"/><rect x=\"4\" y=\"4\" width=\"2\" height=\"1\"/><rect x=\"4\" y=\"5\" width=\"1\" height=\"1\"/></svg>Se connecter</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--color-accent, #ffc53d); color: var(--color-on-accent, #231a00); font-weight: 600; font-size: 1rem; padding: 12px 16px; border: 3px solid var(--color-accent-border, #8c6600); border-radius: 0; box-shadow: 3px 3px 0 0 var(--color-shadow, #55617d); transition: box-shadow 150ms, transform 150ms; cursor: pointer; } .ds-btn-primary .ds-icon { width: 16px; height: 16px; } .ds-btn-primary:hover, .ds-btn-primary:focus-visible { box-shadow: none; transform: translate(3px, 3px); } .ds-btn-primary:focus-visible { outline: 3px solid var(--color-focus-ring, #ffc53d); outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: 3px 3px 0 0 var(--color-shadow, #55617d); transform: none; }"
+    },
+    {
+      "name": "Quiz Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The canonical content card: hard border, flat shadow, status badge in the corner.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-head\"><h3 class=\"ds-card-title\">Les bases de Flexbox</h3><p class=\"ds-card-desc\">Alignement, direction et distribution de l'espace en CSS.</p></div><div class=\"ds-card-foot\"><span class=\"ds-chip ds-chip--difficulty\">Moyen</span><span class=\"ds-chip ds-chip--gold\">Nouveau</span></div></div>",
+      "css": ".ds-card { background: var(--color-surface, #1b2133); border: 3px solid var(--color-border, #5a6c9a); box-shadow: 3px 3px 0 0 var(--color-shadow, #55617d); border-radius: 0; padding: 24px; transition: border-color 200ms; } .ds-card:hover { border-color: var(--color-accent-border, #8c6600); } .ds-card-title { font-family: var(--font-display, 'Pixelify Sans', monospace); font-weight: 700; font-size: 1.25rem; color: var(--color-text-primary, #e9edf8); margin: 0 0 8px; } .ds-card-desc { font-size: 0.875rem; color: var(--color-text-secondary, #8a93ad); margin: 0; } .ds-card-foot { display: flex; align-items: center; gap: 12px; margin-top: 16px; } .ds-chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border: 3px solid currentColor; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; } .ds-chip--difficulty { color: #facc15; background: rgba(250, 204, 21, 0.15); } .ds-chip--gold { background: var(--color-accent, #ffc53d); color: var(--color-on-accent, #231a00); border-color: var(--color-accent-border, #8c6600); }"
+    },
+    {
+      "name": "Status Badge (Réussi)",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Semantic status chip -- same shape language as every other badge, color carries the meaning.",
+      "html": "<span class=\"ds-status ds-status--success\"><svg class=\"ds-icon\" viewBox=\"0 0 8 8\" fill=\"currentColor\" shape-rendering=\"crispEdges\"><rect x=\"7\" y=\"2\" width=\"1\" height=\"1\"/><rect x=\"6\" y=\"3\" width=\"1\" height=\"1\"/><rect x=\"5\" y=\"4\" width=\"1\" height=\"1\"/><rect x=\"0\" y=\"5\" width=\"1\" height=\"1\"/><rect x=\"5\" y=\"5\" width=\"1\" height=\"1\"/><rect x=\"1\" y=\"6\" width=\"1\" height=\"1\"/><rect x=\"4\" y=\"6\" width=\"1\" height=\"1\"/><rect x=\"2\" y=\"7\" width=\"2\" height=\"1\"/></svg>Réussi</span>",
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 3px solid; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 0; } .ds-status .ds-icon { width: 12px; height: 12px; } .ds-status--success { background: var(--color-success-surface, #0f3624); color: var(--color-success, #42c97a); border-color: var(--color-success, #42c97a); } .ds-status--error { background: var(--color-error-surface, #3a1a1b); color: var(--color-error, #f2645a); border-color: var(--color-error, #f2645a); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Recessed panel field with a gold focus ring -- no border-color change on focus.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Email</span><input class=\"ds-input\" type=\"email\" placeholder=\"votre@email.com\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 8px; } .ds-field-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-secondary, #8a93ad); } .ds-input { background: var(--color-surface-dimmed, #161b2b); border: 3px solid var(--color-border, #5a6c9a); border-radius: 0; color: var(--color-text-primary, #e9edf8); padding: 12px 16px; font-size: 1rem; } .ds-input::placeholder { color: var(--color-text-secondary, #8a93ad); } .ds-input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--color-focus-ring, #ffc53d); }"
+    },
+    {
+      "name": "Division Badge",
+      "kind": "custom",
+      "refersTo": "badge",
+      "description": "Signature component: the ranked-division chip, reused across dashboard, leaderboard and promotion UI.",
+      "html": "<div class=\"ds-division\"><svg class=\"ds-division-icon\" viewBox=\"0 0 8 8\" fill=\"currentColor\" shape-rendering=\"crispEdges\"><rect x=\"3\" y=\"0\" width=\"2\" height=\"1\"/><rect x=\"1\" y=\"1\" width=\"6\" height=\"1\"/><rect x=\"0\" y=\"2\" width=\"8\" height=\"2\"/><rect x=\"1\" y=\"4\" width=\"6\" height=\"1\"/><rect x=\"3\" y=\"5\" width=\"2\" height=\"1\"/></svg><span>GOLD</span></div>",
+      "css": ".ds-division { display: inline-flex; align-items: center; gap: 8px; background: var(--color-surface, #1b2133); border: 3px solid var(--color-border, #5a6c9a); box-shadow: 3px 3px 0 0 var(--color-shadow, #55617d); border-radius: 0; padding: 6px 12px; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-primary, #e9edf8); } .ds-division-icon { width: 20px; height: 20px; color: #ffd700; }"
+    },
+    {
+      "name": "Nav Item",
+      "kind": "nav",
+      "refersTo": "badge",
+      "description": "Dashboard top-bar link: uppercase label, solid-gold fill when active, no underline indicator.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item ds-nav-item--active\" href=\"#\">Dashboard</a><a class=\"ds-nav-item\" href=\"#\">Classement</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 4px; background: var(--color-ink, #20222c); padding: 8px; } .ds-nav-item { display: inline-flex; align-items: center; padding: 8px 16px; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255,255,255,0.7); text-decoration: none; transition: background 150ms, color 150ms; } .ds-nav-item:hover { background: rgba(255,255,255,0.1); color: var(--color-on-ink, #ffffff); } .ds-nav-item--active { background: var(--color-accent, #ffc53d); color: var(--color-on-accent, #231a00); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Retro Arcade Ladder",
+    "overview": "CodeInQuest reads as an 8-bit arcade cabinet wearing a competitive ranking ladder: pixelated monochrome glyphs, a pixelated chest-icon mascot, and two blocky retro typefaces (Pixelify Sans, Silkscreen) sit on top of a neo-brutalist shell -- thick 3px borders, flat colors, and a single hard, unblurred drop shadow standing in for every elevation cue in the system. The system commits to a single dark theme; there is no light mode to reconcile against, which frees every surface color to be tuned for one context only.\n\nNothing in the system is rounded, and nothing is blurred. Those two absences are deliberate rejections of default \"soft SaaS\" UI (rounded-xl cards, diffuse Material-style shadows) in favor of something that reads like a cartridge-era video game rendered in a browser. The single accent color -- Treasure Gold -- is the one place warmth and value enter an otherwise cool, steel-blue-on-navy palette, and it is reserved for the things the player is meant to chase: calls to action, the active nav item, \"new\" and \"passed\" states, promotion progress.",
+    "keyCharacteristics": [
+      "Pixel-perfect monochrome glyph icons (8x8 grid, currentColor, crispEdges) in place of a conventional icon library.",
+      "One hard-edged, unblurred offset shadow (3px 3px 0 0) as the system's only elevation idiom -- never a soft/blurred shadow.",
+      "Zero border radius anywhere: every card, button, badge, input, and table cell is a hard rectangle.",
+      "Thick (3px) borders on every contained surface; borders carry as much visual weight as fill color.",
+      "A single accent (Treasure Gold) used sparingly and consistently for primary actions and \"you should notice this\" states.",
+      "Uppercase, letter-spaced micro-labels (text-xs uppercase tracking-wide) for every badge, tag, and nav label."
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Treasure Gold is the only warm color in the system and the only color used for calls to action. If a screen needs more than one \"look here\" signal, reach for size, position, or an icon -- never a second accent hue.", "section": "colors" },
+      { "name": "The No-Blur Rule", "body": "Every shadow in the system is a flat, hard-edged offset block (3px 3px 0 0, hard-shadow-slate, zero blur radius). A soft/diffuse shadow is a Material-idiom import and does not belong here, even for \"subtle\" elevation.", "section": "colors" },
+      { "name": "The Uppercase Label Rule", "body": "Any short, categorical piece of text -- a badge, a nav item, a form label, a status tag -- is uppercase with wide letter-spacing. Sentence-case labels are reserved for body copy and headings only.", "section": "typography" },
+      { "name": "The Press Rule", "body": "A shadow-hard element that is also interactive loses its shadow and shifts +3px,+3px on hover -- simulating the surface being pressed flat. A disabled or non-interactive element keeps its shadow at rest and never animates it.", "section": "elevation" },
+      { "name": "The Square Corner Rule", "body": "No element in this system ever receives a border-radius. A rounded corner is an immediate departure from the brand and should be treated as a bug, not a style choice.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep every border at exactly 3px and every corner at 0 radius -- consistency here is what reads as \"one system\" rather than \"mismatched components.\"",
+      "Do use the Press Rule (shadow-hard -> shadow-none + translate-x-[3px] translate-y-[3px]) for anything clickable with a shadow; a shadowed element that doesn't press on hover reads as broken.",
+      "Do reserve Treasure Gold for actionable/noteworthy states (CTAs, active nav, new/passed, promotion progress) -- not as a general decorative color.",
+      "Do render all icons as flat monochrome pixel glyphs (PixelIcon, 8x8 grid, currentColor, crispEdges) rather than introducing a smooth icon library.",
+      "Do use uppercase + wide tracking for every badge, tag, and label."
+    ],
+    "donts": [
+      "Don't add a border-radius anywhere, including \"just this once\" for a new component -- it breaks the Square Corner Rule immediately and visibly.",
+      "Don't introduce a second accent hue; a new \"important\" state should borrow Treasure Gold, size, or iconography, not a new color.",
+      "Don't add a soft/blurred shadow, glow, or gradient for elevation -- the system has exactly one elevation idiom (the hard offset shadow) and importing a Material-style soft shadow is an instant departure from the brand.",
+      "Don't reuse a division's reserved color (Bronze/Silver/Gold/.../Challenger) for anything other than that division's own badge, icon, and progress fill."
+    ]
+  }
+}

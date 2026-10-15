@@ -163,26 +163,20 @@ function renderRects(name: PixelIconName) {
         </>
       );
     case 'Target':
+      // Trois anneaux concentriques (bord plein, vide, anneau, point central)
+      // plutôt qu'un simple carré dans un carré -- le motif se lit comme une
+      // cible/bullseye même à 8x8, au lieu d'un cadre générique.
       return (
         <>
-          <rect x={1} y={0} width={6} height={1} />
-          <rect x={0} y={1} width={1} height={1} />
-          <rect x={7} y={1} width={1} height={1} />
-          <rect x={0} y={2} width={1} height={1} />
+          <rect x={0} y={0} width={8} height={1} />
+          <rect x={0} y={7} width={8} height={1} />
+          <rect x={0} y={1} width={1} height={6} />
+          <rect x={7} y={1} width={1} height={6} />
           <rect x={2} y={2} width={4} height={1} />
-          <rect x={7} y={2} width={1} height={1} />
-          <rect x={0} y={3} width={1} height={1} />
-          <rect x={2} y={3} width={4} height={1} />
-          <rect x={7} y={3} width={1} height={1} />
-          <rect x={0} y={4} width={1} height={1} />
-          <rect x={2} y={4} width={4} height={1} />
-          <rect x={7} y={4} width={1} height={1} />
-          <rect x={0} y={5} width={1} height={1} />
           <rect x={2} y={5} width={4} height={1} />
-          <rect x={7} y={5} width={1} height={1} />
-          <rect x={0} y={6} width={1} height={1} />
-          <rect x={7} y={6} width={1} height={1} />
-          <rect x={1} y={7} width={6} height={1} />
+          <rect x={2} y={3} width={1} height={2} />
+          <rect x={5} y={3} width={1} height={2} />
+          <rect x={3} y={3} width={2} height={2} />
         </>
       );
     case 'AlertCircle':
