@@ -1,7 +1,6 @@
 # Reverse proxy + HTTPS automatique (Let's Encrypt) pour CodeInQuest.
-# Remplacer le nom de domaine ci-dessous par le vrai sous-domaine, puis
-# copier ce fichier vers /etc/caddy/Caddyfile sur le VPS.
+# Copier ce fichier vers /etc/caddy/Caddyfile sur le VPS.
 
-quiz.tondomaine.fr {
+codinquest.guirectalmo.com {
 	reverse_proxy localhost:3000
 }

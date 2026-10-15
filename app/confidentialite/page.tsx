@@ -48,11 +48,16 @@ export default function PrivacyPolicyPage() {
 
             <Section title="Responsable du traitement">
               <p>
-                CodeInQuest est un projet édité par [À compléter : nom et
-                contact du responsable du traitement, ex. « Prénom Nom —
-                email@exemple.com »]. Pour toute question sur vos données
-                personnelles ou pour exercer vos droits, contactez ce
-                responsable à l&apos;adresse ci-dessus.
+                CodeInQuest est un projet édité par l&apos;éditeur du site,
+                joignable à l&apos;adresse{' '}
+                <a
+                  href="mailto:sangwyss.dev@gmail.com"
+                  className="text-accent hover:text-accent-border underline"
+                >
+                  sangwyss.dev@gmail.com
+                </a>
+                . Pour toute question sur vos données personnelles ou pour
+                exercer vos droits, contactez cette adresse.
               </p>
             </Section>
 

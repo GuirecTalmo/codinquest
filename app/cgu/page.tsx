@@ -60,8 +60,15 @@ export default function TermsOfUsePage() {
 
             <Section title="2. Éditeur du service">
               <p>
-                CodeInQuest est édité par [À compléter : nom et contact de
-                l&apos;éditeur, ex. « Prénom Nom — email@exemple.com »].
+                CodeInQuest est édité par l&apos;éditeur du site, joignable à
+                l&apos;adresse{' '}
+                <a
+                  href="mailto:sangwyss.dev@gmail.com"
+                  className="text-accent hover:text-accent-border underline"
+                >
+                  sangwyss.dev@gmail.com
+                </a>
+                .
               </p>
             </Section>
 
