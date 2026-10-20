@@ -7,6 +7,7 @@ import { DivisionBadge } from '@/components/quiz/DivisionBadge';
 import { isDivisionAtLeast } from '@/lib/quiz/divisions';
 import { PixelIcon } from '@/components/PixelIcon';
 import { difficultyConfig } from '@/lib/quiz/difficulty';
+import { QuizCard } from '@/components/quiz/QuizCard';
 
 interface Attempt {
   quizId: string;
@@ -43,7 +44,7 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
           <p className="text-error mb-4">Niveau non trouvé</p>
           <Link
             href="/dashboard"
-            className="inline-block px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+            className="inline-block px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
           >
             Retour au dashboard
           </Link>
@@ -82,7 +83,7 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
       <nav className="flex items-center gap-2 text-sm text-text-secondary">
         <Link
           href="/dashboard"
-          className="flex items-center gap-1 hover:text-text-primary transition-colors"
+          className="flex items-center gap-1 hover:text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
         >
           <PixelIcon name="Home" className="w-4 h-4" />
           Dashboard
@@ -90,7 +91,7 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
         <PixelIcon name="ChevronRight" className="w-4 h-4" />
         <Link
           href="/dashboard"
-          className="hover:text-text-primary transition-colors"
+          className="hover:text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
         >
           Niveaux
         </Link>
@@ -132,7 +133,7 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
 
         {/* Statistiques du niveau */}
         <div className="mt-4 pt-4 border-t-[3px] border-border">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-2">
             <span className="text-sm text-text-secondary font-medium uppercase tracking-wide">Progression du niveau</span>
             <span className="text-sm font-semibold text-text-primary">
               {passedCount} / {level.quizzes.length} quiz réussis
@@ -144,9 +145,16 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
-          <p className="text-xs text-text-secondary mt-2">
-            {Math.round(progressPercentage)}% du niveau complété
-          </p>
+          {progressPercentage === 100 ? (
+            <p className="flex items-center gap-1 text-xs font-semibold text-accent mt-2">
+              <PixelIcon name="Trophy" className="w-4 h-4" />
+              Niveau terminé !
+            </p>
+          ) : (
+            <p className="text-xs text-text-secondary mt-2">
+              {Math.round(progressPercentage)}% du niveau complété
+            </p>
+          )}
         </div>
       </div>
 
@@ -167,113 +175,68 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
             {level.quizzes.map((quiz) => {
               const status = getQuizStatus(quiz.id, attempts);
 
-              return (
-                <div
-                  key={quiz.id}
-                  className={`relative bg-surface shadow-hard border-[3px] p-6 transition-all duration-200 ${
-                    locked
-                      ? 'border-border opacity-60 cursor-not-allowed'
-                      : status.passed
-                      ? 'border-success'
-                      : status.attempted
-                      ? 'border-error'
-                      : 'border-border hover:border-accent-border'
-                  }`}
-                >
-                  {locked && (
+              if (locked) {
+                return (
+                  <div
+                    key={quiz.id}
+                    className="relative bg-surface shadow-hard border-[3px] border-border opacity-60 cursor-not-allowed p-6"
+                  >
                     <div className="absolute inset-0 bg-ink/80 flex items-center justify-center z-10">
                       <PixelIcon name="Lock" className="w-12 h-12 text-text-secondary" />
                     </div>
-                  )}
 
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-display font-bold text-text-primary flex-1">{quiz.title}</h3>
-                    {status.passed && (
-                      <PixelIcon name="CheckCircle2" className="w-6 h-6 text-success flex-shrink-0 ml-2" />
-                    )}
-                    {status.attempted && !status.passed && (
-                      <PixelIcon name="XCircle" className="w-6 h-6 text-error flex-shrink-0 ml-2" />
-                    )}
-                  </div>
-
-                  {quiz.description && (
-                    <p className="text-sm text-text-secondary mb-4 line-clamp-2">
-                      {quiz.description}
-                    </p>
-                  )}
-
-                  <div className="flex items-center gap-2 mb-4 flex-wrap">
-                    <span
-                      className={`px-2 py-1 border-[3px] text-xs font-semibold uppercase tracking-wide ${difficultyConfig[quiz.difficulty].bgColor} ${difficultyConfig[quiz.difficulty].color}`}
-                    >
-                      {difficultyConfig[quiz.difficulty].label}
-                    </span>
-                    <span className="text-xs text-text-secondary">
-                      {quiz.questionCount} questions
-                    </span>
-                    {quiz.timeLimit && (
-                      <span className="text-xs text-text-secondary">
-                        {Math.floor(quiz.timeLimit / 60)} min
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Meilleur score si tenté */}
-                  {status.attempted && (
-                    <div className="mb-4 p-2 bg-surface-dimmed border-[3px] border-border">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-text-secondary">Meilleur score</span>
-                        <div className="flex items-center gap-1">
-                          <PixelIcon name="TrendingUp" className="w-3 h-3 text-accent" />
-                          <span
-                            className={`text-sm font-semibold ${
-                              status.passed ? 'text-success' : 'text-error'
-                            }`}
-                          >
-                            {status.bestScore}%
-                          </span>
-                        </div>
-                      </div>
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-xl font-display font-bold text-text-primary flex-1">{quiz.title}</h3>
                     </div>
-                  )}
 
-                  {/* Verrouillé : pas de Link du tout (plutôt qu'un onClick qui
-                      intercepte la navigation), pour rester un Server Component */}
-                  {locked ? (
+                    {quiz.description && (
+                      <p className="text-sm text-text-secondary mb-4 line-clamp-2">
+                        {quiz.description}
+                      </p>
+                    )}
+
+                    <div className="flex items-center gap-2 mb-4 flex-wrap">
+                      <span
+                        className={`px-2 py-1 border-[3px] text-xs font-semibold uppercase tracking-wide ${difficultyConfig[quiz.difficulty].bgColor} ${difficultyConfig[quiz.difficulty].color}`}
+                      >
+                        {difficultyConfig[quiz.difficulty].label}
+                      </span>
+                      <span className="text-xs text-text-secondary">
+                        {quiz.questionCount} questions
+                      </span>
+                      {quiz.timeLimit && (
+                        <span className="text-xs text-text-secondary">
+                          {Math.floor(quiz.timeLimit / 60)} min
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Verrouillé : pas de Link du tout (plutôt qu'un onClick qui
+                        intercepte la navigation), pour rester un Server Component */}
                     <div className="flex items-center justify-center gap-2 w-full text-center px-4 py-2 border-[3px] border-border font-semibold bg-surface-dimmed text-text-secondary cursor-not-allowed">
                       <PixelIcon name="Lock" className="w-4 h-4" />
                       Verrouillé
                     </div>
-                  ) : (
-                    <Link
-                      href={`/dashboard/quiz/${quiz.id}`}
-                      className={`flex items-center justify-center gap-2 w-full text-center px-4 py-2 border-[3px] font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all ${
-                        status.passed
-                          ? 'bg-success border-success text-on-state'
-                          : status.attempted
-                          ? 'bg-accent border-accent-border text-on-accent'
-                          : 'bg-accent border-accent-border text-on-accent'
-                      }`}
-                    >
-                      {status.passed ? (
-                        <>
-                          Refaire
-                          <PixelIcon name="RotateCcw" className="w-4 h-4" />
-                        </>
-                      ) : status.attempted ? (
-                        <>
-                          Réessayer
-                          <PixelIcon name="RotateCcw" className="w-4 h-4" />
-                        </>
-                      ) : (
-                        <>
-                          Commencer
-                          <PixelIcon name="ArrowRight" className="w-4 h-4" />
-                        </>
-                      )}
-                    </Link>
-                  )}
-                </div>
+                  </div>
+                );
+              }
+
+              return (
+                <QuizCard
+                  key={quiz.id}
+                  quiz={{
+                    id: quiz.id,
+                    title: quiz.title,
+                    description: quiz.description,
+                    difficulty: quiz.difficulty,
+                    timeLimit: quiz.timeLimit,
+                    passingScore: quiz.passingScore,
+                    passed: status.passed,
+                    attempted: status.attempted,
+                    bestScore: status.bestScore,
+                  }}
+                  showStatusBorder
+                />
               );
             })}
           </div>

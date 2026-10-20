@@ -13,15 +13,28 @@ interface QuizCardProps {
     passingScore?: number;
     passed?: boolean;
     attempted?: boolean;
+    bestScore?: number | null;
   };
   levelName?: string;
+  // Bordure permanente verte/rouge selon réussite/échec, plutôt que la
+  // bordure neutre qui ne change qu'au survol -- utile sur une page qui
+  // liste les tentatives d'un niveau (où le statut doit rester visible sans
+  // survol), inutile sur la grille du dashboard qui garde le défaut.
+  showStatusBorder?: boolean;
 }
 
-export function QuizCard({ quiz, levelName }: QuizCardProps) {
+export function QuizCard({ quiz, levelName, showStatusBorder = false }: QuizCardProps) {
   const difficulty = difficultyConfig[quiz.difficulty];
+  const statusBorderClass = showStatusBorder
+    ? quiz.passed
+      ? 'border-success'
+      : quiz.attempted
+      ? 'border-error'
+      : 'border-border hover:border-accent-border'
+    : 'border-border hover:border-accent-border';
 
   const cardBody = (
-      <div className="bg-surface border-[3px] border-border shadow-hard p-6 transition-all duration-200 hover:border-accent-border hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]">
+      <div className={`bg-surface border-[3px] shadow-hard p-6 transition-all duration-200 hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] ${statusBorderClass}`}>
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <h3 className="text-xl font-display font-bold text-text-primary mb-2">
@@ -71,6 +84,20 @@ export function QuizCard({ quiz, levelName }: QuizCardProps) {
             )}
           </div>
         </div>
+
+        {quiz.attempted && quiz.bestScore != null && (
+          <div className="mt-3 p-2 bg-surface-dimmed border-[3px] border-border">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-text-secondary">Meilleur score</span>
+              <div className="flex items-center gap-1">
+                <PixelIcon name="TrendingUp" className="w-3 h-3 text-accent" />
+                <span className={`text-sm font-semibold ${quiz.passed ? 'text-success' : 'text-error'}`}>
+                  {quiz.bestScore}%
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {quiz.passingScore != null && quiz.passingScore !== DEFAULT_PASSING_SCORE && (
           <div className="mt-3 text-xs text-text-secondary">
