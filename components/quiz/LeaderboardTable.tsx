@@ -87,7 +87,7 @@ export function LeaderboardTable({
                         </span>
                         {entry.isCurrentUser && (
                           <span className="text-xs text-accent font-semibold mt-1 uppercase tracking-wide">
-                            (Vous)
+                            C&apos;est toi !
                           </span>
                         )}
                       </div>

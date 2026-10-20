@@ -24,13 +24,29 @@ export default async function LeaderboardPage() {
   const restOfLeaderboard = leaderboard.slice(3);
   const currentUserEntry = leaderboard.find((entry) => entry.isCurrentUser);
 
-  // Couleurs plates par rang (reprend les teintes déjà utilisées par
-  // DivisionBadge -- bronze/argent/or -- plutôt qu'un dégradé).
-  const podiumStyles = [
-    'bg-accent border-accent-border text-on-accent', // Or (1er)
-    'bg-gray-400 border-ink text-on-ink', // Argent (2e)
-    'bg-amber-700 border-ink text-on-ink', // Bronze (3e)
-  ];
+  // Hors du top 100 affiché, un numéro de rang isolé ne dit rien de la
+  // compétition : on va chercher les joueurs juste autour du rang réel du
+  // joueur, pour qu'il voie qui le précède et le suit (PRODUCT.md : la
+  // compétition comme moteur de rétention).
+  const NEARBY_RADIUS = 5;
+  const nearbyPlayers =
+    userPosition && !currentUserEntry
+      ? (
+          await getLeaderboard({
+            skip: Math.max(0, userPosition - 1 - NEARBY_RADIUS),
+            limit: NEARBY_RADIUS * 2 + 1,
+            currentUserId,
+          })
+        ).leaderboard
+      : [];
+
+  // Les trois tuiles partagent la surface standard du système (plutôt que
+  // des teintes Tailwind brutes hors-token, ou l'or de l'accent en grand
+  // aplat sur la tuile #1 -- une entorse non documentée à la Règle du Seul
+  // Accent) : l'identité or/argent/bronze est portée par la médaille
+  // RankMedal elle-même, pas par le fond de la carte. Seules la taille et la
+  // position (tuile centrale plus grande, surélevée) distinguent les rangs.
+  const podiumTileClass = 'bg-surface border-[3px] shadow-hard text-center';
 
   return (
     <div className="space-y-8">
@@ -52,6 +68,9 @@ export default async function LeaderboardPage() {
             </div>
           )}
         </div>
+        <p className="text-xs text-text-secondary mt-2">
+          À score total égal, le nombre de quiz complétés départage.
+        </p>
       </div>
 
       {/* Podium (Top 3) */}
@@ -66,9 +85,9 @@ export default async function LeaderboardPage() {
             {/* 2ème place */}
             {top3[1] && (
               <div className="flex-1 max-w-[280px]">
-                <div className={`border-[3px] shadow-hard p-6 text-center ${podiumStyles[1]}`}>
+                <div className={`${podiumTileClass} border-border p-6`}>
                   <RankMedal rank={2} className="w-16 h-16 mx-auto mb-3" />
-                  <div className="font-bold text-lg mb-2">#{top3[1].rank}</div>
+                  <div className="font-bold text-lg mb-2 text-text-secondary">#{top3[1].rank}</div>
                   <div className="font-semibold text-xl mb-2 truncate">
                     {top3[1].name}
                   </div>
@@ -81,7 +100,7 @@ export default async function LeaderboardPage() {
                   <div className="font-bold text-2xl mb-1">
                     {top3[1].totalScore.toLocaleString()}
                   </div>
-                  <div className="text-sm">
+                  <div className="text-sm text-text-secondary">
                     {top3[1].quizzesCompleted} quiz
                   </div>
                   {top3[1].isCurrentUser && (
@@ -96,12 +115,12 @@ export default async function LeaderboardPage() {
             {/* 1ère place */}
             {top3[0] && (
               <div className="flex-1 max-w-[300px]">
-                <div className={`border-[3px] shadow-hard p-8 text-center relative ${podiumStyles[0]}`}>
+                <div className={`${podiumTileClass} p-8 relative border-accent-border`}>
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <PixelIcon name="Crown" className="w-8 h-8 text-accent" />
                   </div>
                   <RankMedal rank={1} className="w-20 h-20 mx-auto mb-4" />
-                  <div className="font-bold text-xl mb-3">#{top3[0].rank}</div>
+                  <div className="font-bold text-xl mb-3 text-text-secondary">#{top3[0].rank}</div>
                   <div className="font-bold text-2xl mb-3 truncate">
                     {top3[0].name}
                   </div>
@@ -114,7 +133,7 @@ export default async function LeaderboardPage() {
                   <div className="font-bold text-3xl mb-2">
                     {top3[0].totalScore.toLocaleString()}
                   </div>
-                  <div className="text-base font-semibold">
+                  <div className="text-base font-semibold text-text-secondary">
                     {top3[0].quizzesCompleted} quiz complétés
                   </div>
                   {top3[0].isCurrentUser && (
@@ -129,9 +148,9 @@ export default async function LeaderboardPage() {
             {/* 3ème place */}
             {top3[2] && (
               <div className="flex-1 max-w-[280px]">
-                <div className={`border-[3px] shadow-hard p-6 text-center ${podiumStyles[2]}`}>
+                <div className={`${podiumTileClass} border-border p-6`}>
                   <RankMedal rank={3} className="w-16 h-16 mx-auto mb-3" />
-                  <div className="font-bold text-lg mb-2">#{top3[2].rank}</div>
+                  <div className="font-bold text-lg mb-2 text-text-secondary">#{top3[2].rank}</div>
                   <div className="font-semibold text-xl mb-2 truncate">
                     {top3[2].name}
                   </div>
@@ -144,7 +163,7 @@ export default async function LeaderboardPage() {
                   <div className="font-bold text-2xl mb-1">
                     {top3[2].totalScore.toLocaleString()}
                   </div>
-                  <div className="text-sm">
+                  <div className="text-sm text-text-secondary">
                     {top3[2].quizzesCompleted} quiz
                   </div>
                   {top3[2].isCurrentUser && (
@@ -170,16 +189,15 @@ export default async function LeaderboardPage() {
         </div>
       )}
 
-      {/* Position actuelle si hors du top affiché (au-delà de la première page) */}
+      {/* Autour de toi : si le joueur est hors du top 100 affiché, montrer
+          qui le précède et le suit plutôt qu'un simple numéro isolé. */}
       {userPosition && !currentUserEntry && (
-        <div className="sticky bottom-0 bg-surface border-[3px] border-accent shadow-hard p-4 z-10">
-          <div className="flex items-center justify-center gap-3">
-            <PixelIcon name="Trophy" className="w-5 h-5 text-accent" />
-            <span className="text-text-primary font-semibold">
-              Tu es classé #{userPosition} sur {total} joueurs
-            </span>
-            <PixelIcon name="TrendingUp" className="w-5 h-5 text-accent" />
-          </div>
+        <div>
+          <h2 className="text-2xl font-display font-bold text-text-primary mb-4 flex items-center gap-2">
+            <PixelIcon name="TrendingUp" className="w-6 h-6 text-accent" />
+            Autour de toi — #{userPosition} sur {total} joueurs
+          </h2>
+          {nearbyPlayers.length > 0 && <LeaderboardTable leaderboard={nearbyPlayers} />}
         </div>
       )}
     </div>

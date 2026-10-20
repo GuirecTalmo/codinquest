@@ -20,6 +20,10 @@ export interface LeaderboardPage {
 // Le tri par division s'appuie sur l'ordre natif de l'enum Postgres
 // (BRONZE=1 ... CHALLENGER=7, déclaré dans ce même ordre dans schema.prisma) :
 // { division: 'desc' } place donc CHALLENGER en tête, comme DIVISIONS_ORDER.
+// À score total égal, le nombre de quiz complétés départage (plutôt qu'un
+// ordre d'insertion/id silencieux) -- cohérent avec le principe produit "le
+// classement doit rester gagné" : un départage visible et explicable, pas
+// arbitraire. Garder ce tri synchronisé avec getUserRank ci-dessous.
 // Partagé entre /api/leaderboard et les pages Server Component.
 export async function getLeaderboard(params: {
   skip: number;
@@ -38,7 +42,11 @@ export async function getLeaderboard(params: {
         totalScore: true,
         quizzesCompleted: true,
       },
-      orderBy: [{ division: 'desc' }, { totalScore: 'desc' }],
+      orderBy: [
+        { division: 'desc' },
+        { totalScore: 'desc' },
+        { quizzesCompleted: 'desc' },
+      ],
       skip,
       take: limit,
     }),
@@ -67,7 +75,7 @@ export async function getLeaderboard(params: {
 export async function getUserRank(userId: string): Promise<number | null> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { division: true, totalScore: true },
+    select: { division: true, totalScore: true, quizzesCompleted: true },
   });
 
   if (!user) return null;
@@ -75,14 +83,25 @@ export async function getUserRank(userId: string): Promise<number | null> {
   const myIndex = DIVISIONS_ORDER.indexOf(user.division);
   const higherDivisions = DIVISIONS_ORDER.slice(myIndex + 1);
 
-  const [higherDivisionCount, sameDivisionBetterScoreCount] = await Promise.all([
-    higherDivisions.length > 0
-      ? prisma.user.count({ where: { division: { in: higherDivisions } } })
-      : Promise.resolve(0),
-    prisma.user.count({
-      where: { division: user.division, totalScore: { gt: user.totalScore } },
-    }),
-  ]);
+  // Compte les utilisateurs strictement mieux classés selon le même ordre
+  // que getLeaderboard (division, puis score, puis quiz complétés), pour que
+  // ce rang corresponde exactement à la position dans la liste triée.
+  const [higherDivisionCount, betterScoreCount, tiedScoreMoreQuizzesCount] =
+    await Promise.all([
+      higherDivisions.length > 0
+        ? prisma.user.count({ where: { division: { in: higherDivisions } } })
+        : Promise.resolve(0),
+      prisma.user.count({
+        where: { division: user.division, totalScore: { gt: user.totalScore } },
+      }),
+      prisma.user.count({
+        where: {
+          division: user.division,
+          totalScore: user.totalScore,
+          quizzesCompleted: { gt: user.quizzesCompleted },
+        },
+      }),
+    ]);
 
-  return higherDivisionCount + sameDivisionBetterScoreCount + 1;
+  return higherDivisionCount + betterScoreCount + tiedScoreMoreQuizzesCount + 1;
 }
