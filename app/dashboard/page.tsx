@@ -147,7 +147,6 @@ export default async function DashboardPage() {
                           attempted: status.attempted,
                         }}
                         levelName={level.name}
-                        locked={false}
                       />
                     );
                   })}

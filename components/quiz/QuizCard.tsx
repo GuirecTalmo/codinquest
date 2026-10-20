@@ -14,7 +14,6 @@ interface QuizCardProps {
     attempted?: boolean;
   };
   levelName?: string;
-  locked?: boolean;
 }
 
 // Score minimum par défaut du système (`passingScore` Prisma, voir
@@ -50,23 +49,11 @@ const difficultyConfig: Record<
   },
 };
 
-export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
+export function QuizCard({ quiz, levelName }: QuizCardProps) {
   const difficulty = difficultyConfig[quiz.difficulty];
 
   const cardBody = (
-      <div
-        className={`bg-surface border-[3px] border-border shadow-hard p-6 transition-all duration-200 ${
-          locked
-            ? 'opacity-60'
-            : 'hover:border-accent-border hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]'
-        }`}
-      >
-        {locked && (
-          <div className="absolute inset-0 bg-ink/80 flex items-center justify-center z-10">
-            <PixelIcon name="Lock" className="w-10 h-10 text-text-secondary" />
-          </div>
-        )}
-
+      <div className="bg-surface border-[3px] border-border shadow-hard p-6 transition-all duration-200 hover:border-accent-border hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px]">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <h3 className="text-xl font-display font-bold text-text-primary mb-2">
@@ -102,19 +89,13 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
           </div>
 
           <div className="flex items-center gap-2">
-            {locked && (
-              <span className="px-2 py-1 bg-surface-dimmed text-text-secondary text-xs font-semibold uppercase tracking-wide border-[3px] border-border-dimmed flex items-center gap-1">
-                <PixelIcon name="Lock" className="w-3 h-3" />
-                Verrouillé
-              </span>
-            )}
-            {!locked && !quiz.attempted && !quiz.passed && (
+            {!quiz.attempted && !quiz.passed && (
               <span className="px-2 py-1 bg-accent text-on-accent text-xs font-semibold uppercase tracking-wide border-[3px] border-accent-border flex items-center gap-1">
                 <PixelIcon name="Zap" className="w-3 h-3" />
                 Nouveau
               </span>
             )}
-            {!locked && quiz.passed && (
+            {quiz.passed && (
               <span className="px-2 py-1 bg-success-surface text-success text-xs font-semibold uppercase tracking-wide border-[3px] border-success flex items-center gap-1">
                 <PixelIcon name="CheckCircle2" className="w-3 h-3" />
                 Réussi
@@ -130,15 +111,6 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
         )}
       </div>
   );
-
-  // Verrouillé : pas de Link du tout (plutôt qu'un onClick qui intercepte la
-  // navigation) pour que ce composant reste un Server Component, y compris
-  // rendu depuis une page serveur.
-  if (locked) {
-    return (
-      <div className="block group relative cursor-not-allowed">{cardBody}</div>
-    );
-  }
 
   return (
     <Link
