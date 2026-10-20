@@ -52,11 +52,11 @@ export default async function LeaderboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-4xl font-display font-bold text-text-primary mb-2 flex items-center justify-center gap-3">
-          <PixelIcon name="Trophy" className="w-10 h-10 text-accent" />
+        <h1 className="text-2xl sm:text-4xl font-display font-bold text-text-primary mb-2 flex items-center justify-center gap-3">
+          <PixelIcon name="Trophy" className="w-8 h-8 sm:w-10 sm:h-10 text-accent flex-shrink-0" />
           Classement Mondial
         </h1>
-        <div className="flex items-center justify-center gap-6 text-text-secondary">
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-text-secondary">
           <div className="flex items-center gap-2">
             <PixelIcon name="User" className="w-5 h-5" />
             <span>{total} joueur{total > 1 ? 's' : ''}</span>
@@ -75,17 +75,22 @@ export default async function LeaderboardPage() {
 
       {/* Podium (Top 3) */}
       {top3.length > 0 && (
-        <div className="bg-surface border-[3px] border-accent-border shadow-hard p-8">
-          <h2 className="text-2xl font-display font-bold text-text-primary mb-6 text-center flex items-center justify-center gap-2">
+        <div className="bg-surface border-[3px] border-accent-border shadow-hard p-5 sm:p-8">
+          <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary mb-6 text-center flex items-center justify-center gap-2">
             <PixelIcon name="Crown" className="w-6 h-6 text-accent" />
             Top 3
           </h2>
 
-          <div className="flex items-end justify-center gap-4 mb-6">
+          {/* Empilé verticalement sous sm (1er en haut), trois colonnes
+              côte à côte à partir de sm -- le tri visuel (1er au centre en
+              desktop) vient de l'ordre naturel du DOM ; les classes order-*
+              ne font qu'imposer "1er en premier" sur mobile, puis
+              sm:order-none rend la main à cet ordre naturel. */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-center gap-4 mb-6">
             {/* 2ème place */}
             {top3[1] && (
-              <div className="flex-1 max-w-[280px]">
-                <div className={`${podiumTileClass} border-border p-6`}>
+              <div className="w-full sm:flex-1 sm:max-w-[280px] order-2 sm:order-none">
+                <div className={`${podiumTileClass} border-border p-5 sm:p-6`}>
                   <RankMedal rank={2} className="w-16 h-16 mx-auto mb-3" />
                   <div className="font-bold text-lg mb-2 text-text-secondary">#{top3[1].rank}</div>
                   <div className="font-semibold text-xl mb-2 truncate">
@@ -114,8 +119,8 @@ export default async function LeaderboardPage() {
 
             {/* 1ère place */}
             {top3[0] && (
-              <div className="flex-1 max-w-[300px]">
-                <div className={`${podiumTileClass} p-8 relative border-accent-border`}>
+              <div className="w-full sm:flex-1 sm:max-w-[300px] order-1 sm:order-none">
+                <div className={`${podiumTileClass} p-6 sm:p-8 relative border-accent-border`}>
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <PixelIcon name="Crown" className="w-8 h-8 text-accent" />
                   </div>
@@ -147,8 +152,8 @@ export default async function LeaderboardPage() {
 
             {/* 3ème place */}
             {top3[2] && (
-              <div className="flex-1 max-w-[280px]">
-                <div className={`${podiumTileClass} border-border p-6`}>
+              <div className="w-full sm:flex-1 sm:max-w-[280px] order-3 sm:order-none">
+                <div className={`${podiumTileClass} border-border p-5 sm:p-6`}>
                   <RankMedal rank={3} className="w-16 h-16 mx-auto mb-3" />
                   <div className="font-bold text-lg mb-2 text-text-secondary">#{top3[2].rank}</div>
                   <div className="font-semibold text-xl mb-2 truncate">
@@ -181,8 +186,8 @@ export default async function LeaderboardPage() {
       {/* Tableau classement (rang 4+) */}
       {restOfLeaderboard.length > 0 && (
         <div>
-          <h2 className="text-2xl font-display font-bold text-text-primary mb-4 flex items-center gap-2">
-            <PixelIcon name="Medal" className="w-6 h-6 text-text-secondary" />
+          <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary mb-4 flex items-center gap-2">
+            <PixelIcon name="Medal" className="w-6 h-6 text-text-secondary flex-shrink-0" />
             Classement complet
           </h2>
           <LeaderboardTable leaderboard={restOfLeaderboard} />
@@ -193,9 +198,9 @@ export default async function LeaderboardPage() {
           qui le précède et le suit plutôt qu'un simple numéro isolé. */}
       {userPosition && !currentUserEntry && (
         <div>
-          <h2 className="text-2xl font-display font-bold text-text-primary mb-4 flex items-center gap-2">
-            <PixelIcon name="TrendingUp" className="w-6 h-6 text-accent" />
-            Autour de toi — #{userPosition} sur {total} joueurs
+          <h2 className="text-xl sm:text-2xl font-display font-bold text-text-primary mb-4 flex items-center gap-2">
+            <PixelIcon name="TrendingUp" className="w-6 h-6 text-accent flex-shrink-0" />
+            <span>Autour de toi — #{userPosition} sur {total} joueurs</span>
           </h2>
           {nearbyPlayers.length > 0 && <LeaderboardTable leaderboard={nearbyPlayers} />}
         </div>
