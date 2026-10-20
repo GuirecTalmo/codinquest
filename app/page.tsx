@@ -10,24 +10,21 @@ import { DIVISIONS_ORDER } from '@/lib/quiz/divisions';
 const LADDER_ORDER = [...DIVISIONS_ORDER].reverse();
 
 export default function Home() {
+  // Seul le libellé du CTA de nav dépend de la session (Se connecter / Mon
+  // compte) ; tant qu'elle résout ('loading'), isAuthenticated reste false et
+  // affiche "Se connecter" par défaut -- pas besoin de bloquer tout le
+  // premier rendu (hero, échelle, features) derrière le statut de session.
   const { status } = useSession();
   const isAuthenticated = status === 'authenticated';
-
-  if (status === 'loading') {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-bg">
-        <p className="text-text-secondary font-display uppercase tracking-wide">
-          Chargement...
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-bg">
       {/* Navigation */}
       <nav className="container mx-auto px-4 py-6 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3">
+        <Link
+          href="/"
+          className="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
+        >
           <Image
             src="/icons/chest-closed-48.png"
             alt=""
@@ -37,12 +34,15 @@ export default function Home() {
             unoptimized
             className="w-10 h-10 [image-rendering:pixelated]"
           />
-          <span className="text-2xl font-display font-bold text-text-primary">CodeInQuest</span>
+          {/* Masqué sous sm, comme la nav du dashboard (voir DESIGN.md,
+              Navigation) -- seule la nav de la landing page avait dérogé à
+              cette règle. */}
+          <span className="hidden sm:block text-2xl font-display font-bold text-text-primary">CodeInQuest</span>
         </Link>
         {isAuthenticated ? (
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
           >
             <PixelIcon name="User" className="w-4 h-4" />
             Mon compte
@@ -50,7 +50,7 @@ export default function Home() {
         ) : (
           <Link
             href="/auth/signin"
-            className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
           >
             <PixelIcon name="LogIn" className="w-4 h-4" />
             Se connecter
@@ -77,35 +77,20 @@ export default function Home() {
               De Bronze à Challenger, chaque réussite compte !
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/auth/signup"
-                className="flex items-center justify-center gap-2 px-8 py-4 bg-accent border-[3px] border-accent-border text-on-accent font-semibold text-lg shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+                className="flex items-center justify-center gap-2 px-8 py-4 bg-accent border-[3px] border-accent-border text-on-accent font-semibold text-lg shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
               >
                 Commencer
                 <PixelIcon name="ArrowRight" className="w-5 h-5" />
               </Link>
               <Link
                 href="/auth/signin"
-                className="flex items-center justify-center gap-2 px-8 py-4 bg-surface border-[3px] border-border text-text-primary font-semibold text-lg shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+                className="flex items-center justify-center gap-2 px-8 py-4 bg-surface border-[3px] border-border text-text-primary font-semibold text-lg shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
               >
                 J&apos;ai déjà un compte
               </Link>
-            </div>
-
-            <div className="flex flex-wrap gap-6">
-              <div>
-                <span className="font-display font-bold text-xl text-text-primary">7</span>{' '}
-                <span className="text-text-secondary text-sm uppercase tracking-wide">divisions</span>
-              </div>
-              <div>
-                <span className="font-display font-bold text-xl text-text-primary">6+</span>{' '}
-                <span className="text-text-secondary text-sm uppercase tracking-wide">quiz</span>
-              </div>
-              <div>
-                <span className="font-display font-bold text-xl text-text-primary">30+</span>{' '}
-                <span className="text-text-secondary text-sm uppercase tracking-wide">questions</span>
-              </div>
             </div>
           </div>
 
@@ -192,19 +177,37 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* CTA de fin -- sans ça, un visiteur convaincu en arrivant ici
+            devait remonter en haut de page pour trouver "Commencer". */}
+        <div className="max-w-6xl mx-auto mt-16 bg-surface border-[3px] border-accent-border shadow-hard p-10 text-center">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-text-primary mb-3">
+            Prêt à grimper les divisions ?
+          </h2>
+          <p className="text-text-secondary mb-6 max-w-xl mx-auto">
+            Créez votre compte et lancez votre premier quiz en moins d&apos;une minute.
+          </p>
+          <Link
+            href="/auth/signup"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent border-[3px] border-accent-border text-on-accent font-semibold text-lg shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
+          >
+            Commencer
+            <PixelIcon name="ArrowRight" className="w-5 h-5" />
+          </Link>
+        </div>
       </main>
 
       <footer className="container mx-auto px-4 py-8 border-t-[3px] border-border">
         <div className="max-w-6xl mx-auto flex justify-center gap-6">
           <Link
             href="/confidentialite"
-            className="text-text-secondary hover:text-accent text-sm transition-colors"
+            className="text-text-secondary hover:text-accent text-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
           >
             Politique de confidentialité
           </Link>
           <Link
             href="/cgu"
-            className="text-text-secondary hover:text-accent text-sm transition-colors"
+            className="text-text-secondary hover:text-accent text-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
           >
             CGU
           </Link>

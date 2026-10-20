@@ -6,6 +6,7 @@ import { getLevelById } from '@/lib/data/levels';
 import { DivisionBadge } from '@/components/quiz/DivisionBadge';
 import { isDivisionAtLeast } from '@/lib/quiz/divisions';
 import { PixelIcon } from '@/components/PixelIcon';
+import { difficultyConfig } from '@/lib/quiz/difficulty';
 
 interface Attempt {
   quizId: string;
@@ -102,7 +103,7 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <div>
             <h1 className="text-3xl font-display font-bold text-text-primary mb-2 flex items-center gap-3">
-              {locked && <PixelIcon name="Lock" className="w-8 h-8 text-error" />}
+              {locked && <PixelIcon name="Lock" className="w-8 h-8 text-text-secondary" />}
               {level.name}
             </h1>
             {level.description && (
@@ -115,10 +116,12 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
-        {/* Message si verrouillé */}
+        {/* Message si verrouillé -- neutre, pas alert-red : être bloqué par sa
+            division est une étape de progression, pas une erreur (voir
+            DESIGN.md, Règle de Statut). */}
         {locked && (
-          <div className="bg-error-surface border-[3px] border-error p-4 mb-4">
-            <div className="flex items-center gap-2 text-error">
+          <div className="bg-surface-dimmed border-[3px] border-border-dimmed p-4 mb-4">
+            <div className="flex items-center gap-2 text-text-secondary">
               <PixelIcon name="Lock" className="w-5 h-5" />
               <span className="font-semibold">
                 Ce niveau est verrouillé. Vous devez atteindre la division {level.minDivision} pour y accéder.
@@ -201,19 +204,9 @@ export default async function LevelPage({ params }: { params: Promise<{ id: stri
 
                   <div className="flex items-center gap-2 mb-4 flex-wrap">
                     <span
-                      className={`px-2 py-1 border-[3px] text-xs font-semibold uppercase tracking-wide ${
-                        quiz.difficulty === 'EASY'
-                          ? 'bg-green-500/20 text-green-400 border-green-500/50'
-                          : quiz.difficulty === 'MEDIUM'
-                          ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50'
-                          : 'bg-red-500/20 text-red-400 border-red-500/50'
-                      }`}
+                      className={`px-2 py-1 border-[3px] text-xs font-semibold uppercase tracking-wide ${difficultyConfig[quiz.difficulty].bgColor} ${difficultyConfig[quiz.difficulty].color}`}
                     >
-                      {quiz.difficulty === 'EASY'
-                        ? 'Facile'
-                        : quiz.difficulty === 'MEDIUM'
-                        ? 'Moyen'
-                        : 'Difficile'}
+                      {difficultyConfig[quiz.difficulty].label}
                     </span>
                     <span className="text-xs text-text-secondary">
                       {quiz.questionCount} questions

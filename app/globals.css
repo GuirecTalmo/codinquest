@@ -37,9 +37,15 @@
 }
 
 /* Seule technique d'élévation du système : un bloc d'ombre plein, sans flou,
-   décalé de 3px -- jamais de shadow floutée (idiome Material proscrit). */
+   décalé de 3px -- jamais de shadow floutée (idiome Material proscrit).
+   Écrit via --tw-shadow (et non `box-shadow:` en dur) pour composer avec le
+   pipeline box-shadow standard de Tailwind v4 -- sinon cette règle écrase
+   silencieusement tout box-shadow venant d'un autre utilitaire appliqué au
+   même élément, en particulier `ring-*`/`focus-visible:ring-*` : un bouton
+   avec shadow-hard ET un anneau de focus ne montrait alors jamais l'anneau. */
 @utility shadow-hard {
-  box-shadow: 3px 3px 0 0 var(--color-shadow);
+  --tw-shadow: 3px 3px 0 0 var(--color-shadow);
+  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
 }
 
 body {
