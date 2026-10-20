@@ -80,7 +80,7 @@ export async function POST(
     // Vérifier que la division de l'utilisateur permet d'accéder à ce niveau
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { division: true },
+      select: { division: true, divisionPoints: true },
     });
 
     if (!user || !isDivisionAtLeast(user.division, quiz.level.minDivision)) {
@@ -146,6 +146,12 @@ export async function POST(
       const wasAlreadyMastered = !!priorPass;
 
       let newDivision: string | null = null;
+      // Valeurs finales après cette tentative, pour que l'écran de résultat
+      // puisse montrer l'état réel de la série même quand elle n'a pas
+      // bougé (quiz déjà maîtrisé) -- voir le composant ProgressBar, déjà
+      // utilisé sur le dashboard avec les mêmes `current`/`division`.
+      let finalDivision: string = user.division;
+      let finalDivisionPoints: number = user.divisionPoints;
 
       if (isPassed && !wasAlreadyMastered) {
         const updatedUser = await tx.user.update({
@@ -161,6 +167,9 @@ export async function POST(
           },
         });
 
+        finalDivision = updatedUser.division;
+        finalDivisionPoints = updatedUser.divisionPoints;
+
         // Vérifier si promotion nécessaire (après incrément, divisionPoints peut être >= 3)
         if (updatedUser.divisionPoints >= 3) {
           const currentDivision = updatedUser.division;
@@ -175,6 +184,8 @@ export async function POST(
               },
             });
             newDivision = nextDivision;
+            finalDivision = nextDivision;
+            finalDivisionPoints = 0;
           }
         }
       } else if (!isPassed && !wasAlreadyMastered) {
@@ -183,9 +194,10 @@ export async function POST(
           where: { id: userId },
           data: { divisionPoints: 0 },
         });
+        finalDivisionPoints = 0;
       }
 
-      return { attempt, newDivision };
+      return { attempt, newDivision, finalDivision, finalDivisionPoints, wasAlreadyMastered };
     });
 
     // Préparer les réponses correctes pour le retour -- l'explication n'est
@@ -203,6 +215,9 @@ export async function POST(
       pointsEarned,
       totalPoints,
       division: result.newDivision || undefined,
+      currentDivision: result.finalDivision,
+      divisionPoints: result.finalDivisionPoints,
+      wasAlreadyMastered: result.wasAlreadyMastered,
       correctAnswers,
     });
   } catch (error) {

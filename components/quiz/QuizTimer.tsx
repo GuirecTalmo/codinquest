@@ -54,6 +54,9 @@ export function QuizTimer({ timeLimit, onTimeUp, onTick }: QuizTimerProps) {
   return (
     <div className="w-full max-w-md mx-auto">
       <div
+        role="timer"
+        aria-live="off"
+        aria-label={`Temps restant : ${formatTime(timeLeft)}`}
         className={`border-[3px] p-4 shadow-hard transition-all duration-300 ${getColorClass()}`}
       >
         <div className="flex items-center justify-between mb-2">

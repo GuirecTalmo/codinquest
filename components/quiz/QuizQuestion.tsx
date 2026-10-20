@@ -40,38 +40,46 @@ export function QuizQuestion({
             {question.points} point{question.points > 1 ? 's' : ''}
           </span>
         </div>
-        <h3 className="text-xl font-semibold text-text-primary mb-4">
+        <h2 className="text-xl font-semibold text-text-primary mb-4">
           {renderInlineCode(question.question)}
-        </h3>
+        </h2>
       </div>
 
       {/* Réponses -- badge lettré A-D + rangée bordée + hard-shadow, comme
-          les answer-option de la source (Codin'sideQuest). */}
-      <div className="space-y-3">
+          les answer-option de la source (Codin'sideQuest). Le groupe est
+          exposé comme un radiogroup : une seule réponse sélectionnable à la
+          fois, state porté par aria-checked plutôt que par la seule couleur. */}
+      <div className="space-y-3" role="radiogroup" aria-label="Choix de réponse">
         {answers.map((answer, index) => {
           const isSelected = selectedAnswer === answer.id;
+          const letter = OPTION_LETTERS[index] ?? '';
 
           return (
             <button
               key={answer.id}
               type="button"
+              role="radio"
+              aria-checked={isSelected}
+              aria-label={`Réponse ${letter} : ${answer.text}`}
               onClick={() => onSelectAnswer(answer.id)}
-              className={`w-full text-left p-4 border-[3px] transition-all duration-200 flex items-center gap-3 ${
+              className={`w-full text-left p-4 border-[3px] transition-all duration-200 flex items-center gap-3 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring ${
                 isSelected
                   ? 'border-accent-border bg-surface shadow-none translate-x-[2px] translate-y-[2px]'
                   : 'border-border bg-surface shadow-hard hover:border-accent-border'
               }`}
             >
               <span
+                aria-hidden="true"
                 className={`flex-shrink-0 w-8 h-8 flex items-center justify-center border-[3px] font-bold text-sm ${
                   isSelected
                     ? 'bg-accent border-accent-border text-on-accent'
                     : 'bg-letter-badge-bg border-border text-letter-badge-text'
                 }`}
               >
-                {OPTION_LETTERS[index] ?? ''}
+                {letter}
               </span>
               <span
+                aria-hidden="true"
                 className={`flex-1 text-base font-medium ${
                   isSelected ? 'text-text-primary' : 'text-text-secondary'
                 }`}

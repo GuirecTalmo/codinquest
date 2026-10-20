@@ -28,7 +28,7 @@ export default async function QuizPage({ params }: { params: Promise<{ id: strin
           <p className="text-error mb-4">{message}</p>
           <Link
             href="/dashboard"
-            className="inline-block px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all"
+            className="inline-block px-4 py-2 bg-accent border-[3px] border-accent-border text-on-accent shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
           >
             Retour au dashboard
           </Link>

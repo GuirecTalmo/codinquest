@@ -27,6 +27,11 @@ export interface QuizForUser {
       // isCorrect n'est jamais inclus, pour ne pas révéler la bonne réponse
     }[];
   }[];
+  // Résumé des tentatives précédentes sur CE quiz par cet utilisateur, pour
+  // que l'écran de quiz puisse prévenir qu'un échec ici ne cassera pas la
+  // série (voir la règle anti-triche dans PRODUCT.md) -- null si jamais
+  // tenté.
+  previousBest: { passed: boolean; bestScore: number } | null;
 }
 
 export type QuizForUserResult =
@@ -80,6 +85,18 @@ export async function getQuizForUser(
     return { status: 'forbidden', requiredDivision: quiz.level.minDivision };
   }
 
+  const priorAttempts = await prisma.quizAttempt.findMany({
+    where: { userId, quizId },
+    select: { score: true, isPassed: true },
+  });
+  const previousBest =
+    priorAttempts.length === 0
+      ? null
+      : {
+          passed: priorAttempts.some((a) => a.isPassed),
+          bestScore: Math.max(...priorAttempts.map((a) => a.score)),
+        };
+
   return {
     status: 'ok',
     quiz: {
@@ -106,6 +123,7 @@ export async function getQuizForUser(
           order: answer.order,
         })),
       })),
+      previousBest,
     },
   };
 }
