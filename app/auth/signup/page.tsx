@@ -20,6 +20,8 @@ export default function SignUpPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,9 +44,17 @@ export default function SignUpPage() {
     });
 
     if (!validationResult.success) {
+      // Un mot de passe peut échouer plusieurs règles à la fois (longueur,
+      // majuscule, minuscule, chiffre -- voir lib/quiz/validations.ts) :
+      // Zod renvoie un `issue` par règle en échec pour le même champ. Les
+      // accumuler (au lieu d'écraser) pour ne pas faire découvrir les
+      // règles une par une à chaque nouvelle soumission.
       validationResult.error.issues.forEach((issue) => {
-        if (issue.path[0]) {
-          newErrors[issue.path[0].toString()] = issue.message;
+        const field = issue.path[0]?.toString();
+        if (field) {
+          newErrors[field] = newErrors[field]
+            ? `${newErrors[field]} ${issue.message}.`
+            : `${issue.message}.`;
         }
       });
     }
@@ -141,6 +151,7 @@ export default function SignUpPage() {
                 type="text"
                 value={formData.name}
                 onChange={handleChange}
+                autoComplete="name"
                 className="w-full px-4 py-3 bg-surface-dimmed border-[3px] border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-all"
                 placeholder="Votre nom"
               />
@@ -164,6 +175,7 @@ export default function SignUpPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                autoComplete="email"
                 className="w-full px-4 py-3 bg-surface-dimmed border-[3px] border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-all"
                 placeholder="votre@email.com"
               />
@@ -180,16 +192,27 @@ export default function SignUpPage() {
                 <PixelIcon name="Lock" className="w-4 h-4" />
                 Mot de passe
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-surface-dimmed border-[3px] border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-all"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  autoComplete="new-password"
+                  className="w-full px-4 py-3 pr-12 bg-surface-dimmed border-[3px] border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-all"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-text-secondary hover:text-text-primary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-colors"
+                  aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                >
+                  <PixelIcon name={showPassword ? 'EyeOff' : 'Eye'} className="w-4 h-4" />
+                </button>
+              </div>
               {errors.password && (
                 <p className="mt-1 text-sm text-error">{errors.password}</p>
               )}
@@ -203,16 +226,27 @@ export default function SignUpPage() {
                 <PixelIcon name="Lock" className="w-4 h-4" />
                 Confirmer le mot de passe
               </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 bg-surface-dimmed border-[3px] border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-all"
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  autoComplete="new-password"
+                  className="w-full px-4 py-3 pr-12 bg-surface-dimmed border-[3px] border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-all"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute inset-y-0 right-0 flex items-center px-3 text-text-secondary hover:text-text-primary focus:outline-none focus:ring-[3px] focus:ring-focus-ring transition-colors"
+                  aria-label={showConfirmPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+                >
+                  <PixelIcon name={showConfirmPassword ? 'EyeOff' : 'Eye'} className="w-4 h-4" />
+                </button>
+              </div>
               {errors.confirmPassword && (
                 <p className="mt-1 text-sm text-error">{errors.confirmPassword}</p>
               )}
@@ -221,7 +255,7 @@ export default function SignUpPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold py-3 px-4 shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0"
+              className="w-full flex items-center justify-center gap-2 bg-accent border-[3px] border-accent-border text-on-accent font-semibold py-3 px-4 shadow-hard hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] transition-all focus:outline-none focus:ring-[3px] focus:ring-focus-ring disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-hard disabled:translate-x-0 disabled:translate-y-0"
             >
               {isLoading ? (
                 'Inscription...'
