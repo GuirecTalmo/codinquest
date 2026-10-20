@@ -141,7 +141,10 @@ export function QuizCard({ quiz, levelName, locked = false }: QuizCardProps) {
   }
 
   return (
-    <Link href={`/dashboard/quiz/${quiz.id}`} className="block group relative">
+    <Link
+      href={`/dashboard/quiz/${quiz.id}`}
+      className="block group relative focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-focus-ring"
+    >
       {cardBody}
     </Link>
   );

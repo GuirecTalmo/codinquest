@@ -74,7 +74,7 @@ export function ProgressBar({ current, total, division }: ProgressBarProps) {
         </p>
       )}
       {!isMaxDivision && (
-        <p className="text-xs text-text-secondary/80 mt-1">
+        <p className="text-xs text-text-secondary mt-1">
           Un échec sur un quiz jamais réussi remet ce compteur à zéro ; rejouer un quiz déjà validé ne casse pas la série.
         </p>
       )}
